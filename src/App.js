@@ -1,9 +1,9 @@
 
 
 import { Section_right_component } from "./components_folder/Section_right_component";
-import { Nav_bar_component } from "./components_folder/Nav_bar_component";
 import { Section_left_component } from "./components_folder/Section_left_component";
 import { useState } from "react";
+import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component, Founded_results_component } from "./components_folder/Nav_bar_component";
 
 
 // This movies data will be shown when we first load the app
@@ -72,7 +72,16 @@ export default function App() {
   return (
     <div className="div_everything_containing">
 
-      <Nav_bar_component  temp_movie_data={temp_movie_data} />
+      
+      <Nav_bar_component>
+
+        <Logo_plus_name_component />
+        <Input_movie_name_component />
+        <Founded_results_component temp_movie_data={temp_movie_data}/>
+
+      </Nav_bar_component>
+
+
 
       <Main_component 
       temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data}
@@ -82,8 +91,6 @@ export default function App() {
     </div>
   )
 }
-
-
 
 
 
