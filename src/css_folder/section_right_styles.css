@@ -1,0 +1,164 @@
+.section_right {
+    width: 40%;
+    height: 96%;
+  
+    background-color: #2a2f34;
+  
+    margin-top: 20px;
+  
+    border-radius: 10px;
+
+    display: grid;
+    grid-template-rows: 100px 1fr;     
+
+    position: relative;
+}
+
+
+
+
+.div_setion_right_summary{
+
+    
+
+    width: 100%;
+    height: 100px;
+    background-color: #3d454f;
+
+    border-radius: 10px;
+
+    display: grid;
+    grid-template-rows: 30px 1fr ;
+
+    row-gap: 10px;
+    
+
+    z-index: 1000;
+}
+.text_movies_you_have_watched{
+
+    margin-left: 20px;
+    color: white;
+    font-family: gilroy;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    
+}
+
+.div_summary_detials{
+
+    margin-left: 20px;
+
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+}
+
+.text_total_movies_watched , .text_average_imdb_raating, .text_average_user_rating , .text_average_movie_duration{
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.icon_total_movies_watched , .icon_average_imdb_rating, .icon_average_user_rating , .icon_average_movie_duration{
+    margin-right: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.div_section_right_movies_list {
+    
+    width: 100%;
+    background-color: #2a2f34;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    z-index: 3000;    
+}
+
+
+
+
+.ul_movies_list {
+    position: absolute;
+    left: -40px;
+
+    list-style: none;
+    /* background-color: bisque; */
+    width: 100%;
+}
+.ul_movies_list li {
+
+    width: 100%;
+    height: 90px;
+    background-color: rgba(96, 141, 126, 0);
+
+
+    border-bottom: 0.1px solid #474e55 ;
+
+    display: grid;
+
+    grid-template-columns: 100px 1fr;
+}
+.div_movie_poster{
+    /* background-color: aliceblue; */
+
+    position: relative;
+}
+.img_movie_poster{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+
+
+    background-color: aquamarine;
+    width: 45px;
+    height: 70px;
+
+    
+}
+.div_movie_text{
+    margin-left: 10px;
+}
+.movie_name{
+    color: white;
+    font-family: Gilroy;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 20px;
+
+    margin-bottom: 0px;
+    
+}
+
+.div_ratings_plus_details{
+    
+    width: 75%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+.text_imdb_rating, .text_movie_duration, .text_user_rating{
+    margin: 0px;
+    margin-top: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+.start_imdb_rating, .text_user_rating, .text_movie_duration{
+    margin-right: 5px;
+}
+
+
