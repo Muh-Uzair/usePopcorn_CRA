@@ -66,7 +66,7 @@ export default function App() {
   const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy)
 
   
-  const [btn_plus_minus, set_btn_plus_minus] = useState(true);
+  
 
 
 
@@ -93,28 +93,36 @@ export default function App() {
       >
 
 
-        <Section_left_component 
-        btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus}
+              <Section_component >
 
-        >
-                <Movie_list_component 
-                temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />
+                      <Movie_list_component 
+                      temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />
 
-        </Section_left_component>
+              </Section_component>
 
 
 
 
-        <Section_right_component 
-        temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
-        
-        >
 
-        </Section_right_component>
 
- 
+              <Section_component 
+              temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
+              
+              >
 
-      </Main_component>
+                <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
+                <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
+
+              </Section_component>
+
+
+
+
+
+
+
+
+        </Main_component>
 
     </div>
   )
@@ -123,12 +131,14 @@ export default function App() {
 
 
 //////////////////////////////////////////////////////////////
-function Section_left_component({
+function Section_component({
 
-  children, btn_plus_minus, set_btn_plus_minus,
+  children, 
+  
 
 }) {
 
+  const [btn_plus_minus, set_btn_plus_minus] = useState(true);
 
 
   return (
@@ -149,7 +159,7 @@ function Section_left_component({
 }
 function Movie_list_component({
 
-  tempMovieData, temp_movie_data, set_temp_movie_data,
+  temp_movie_data, set_temp_movie_data,
 
 }) {
 
@@ -183,35 +193,7 @@ function Movie_list_component({
 
 
 //////////////////////////////////////////////////////////////
-function Section_right_component({
 
-  temp_watch_data, set_temp_watch_data
-  
-  }) {
-  
-    const [btn_plus_minus, set_btn_plus_minus] = useState(true);
-  
-    return (
-  
-      <section className="section_right">
-  
-        <Btn_plus_minus_comoonent btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus}/>
-  
-        {btn_plus_minus && 
-        <>
-  
-          <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
-          <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
-        
-        </>
-        }
-  
-  
-  
-      </section>
-  
-    );
-}
   
   
 function Div_section_right_summary_component({
