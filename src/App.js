@@ -105,9 +105,7 @@ export default function App() {
 
 
 
-              <Section_component 
-              temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
-              
+              <Section_component            
               >
 
                 <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
@@ -169,15 +167,17 @@ function Movie_list_component({
       {temp_movie_data.map((val) => (
         <li key={val.Title}>
 
-          <div className="div_movie_poster">
-            <img className="img_movie_poster" src={val.Poster} />
-          </div>
+          <Img_poster_component 
+          element={
+            <div className="div_movie_poster">
+                  <img className="img_movie_poster" src={val.Poster} />
+            </div>
+          }/>
 
 
           <div className="div_movie_text">
             <p className="movie_name">{val.Title}</p>
             <p className="text_movie_release_year">🗓 {val.Year}</p>
-
           </div>
 
         </li>
@@ -187,6 +187,15 @@ function Movie_list_component({
 
   );
 }
+
+function Img_poster_component({element}) {
+
+  return(
+    element
+  )
+}
+
+
 //////////////////////////////////////////////////////////////
 
 
