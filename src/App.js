@@ -167,12 +167,9 @@ function Movie_list_component({
       {temp_movie_data.map((val) => (
         <li key={val.Title}>
 
-          <Img_poster_component 
-          element={
-            <div className="div_movie_poster">
-                  <img className="img_movie_poster" src={val.Poster} />
-            </div>
-          }/>
+          <div className="div_movie_poster">
+            <img className="img_movie_poster" src={val.Poster} />
+          </div>
 
 
           <div className="div_movie_text">
@@ -188,12 +185,6 @@ function Movie_list_component({
   );
 }
 
-function Img_poster_component({element}) {
-
-  return(
-    element
-  )
-}
 
 
 //////////////////////////////////////////////////////////////
