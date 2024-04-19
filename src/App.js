@@ -85,8 +85,34 @@ export default function App() {
 
       <Main_component 
       temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data}
-      temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}      
-      />
+      temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}   
+      
+      
+      >
+
+        <Section_left_component 
+        temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data}
+
+        >
+
+
+
+        </Section_left_component>
+
+
+
+
+
+
+
+        <Section_right_component 
+        temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
+        
+        >
+        </Section_right_component>
+
+
+      </Main_component>
 
     </div>
   )
@@ -97,8 +123,7 @@ export default function App() {
 
 
 function Main_component({
-temp_movie_data , set_temp_movie_data ,
-temp_watch_data , set_temp_watch_data ,
+children
 
 }) {
 
@@ -106,15 +131,7 @@ temp_watch_data , set_temp_watch_data ,
     
     <main className="main_lower_box">
 
-        <Section_left_component 
-        temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data}
-        />
-
-        <Section_right_component 
-        temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
-        
-        />
-
+      {children}
 
 
     </main>
