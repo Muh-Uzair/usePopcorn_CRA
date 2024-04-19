@@ -18,25 +18,54 @@ temp_watch_data, set_temp_watch_data
 
       {btn_plus_minus && 
       <>
-        <div className="div_setion_right_summary">
 
-          <p className="text_movies_you_have_watched">MOVIES YOU HAVE WATCHED</p>
-
-
-          <div className="div_summary_detials">
-
-            <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{temp_watch_data.length} movies</p>
-            <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>8.65</p>
-            <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>9.5</p>
-            <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>136 min</p>
+        <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
+        <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
+      
+      </>
+      }
 
 
-          </div>
+
+    </section>
+
+  );
+}
+
+
+function Div_section_right_summary_component({
+  temp_watch_data ,
+}) {
+
+  return(
+
+  <div className="div_setion_right_summary">
+
+        <p className="text_movies_you_have_watched">MOVIES YOU HAVE WATCHED</p>
+
+
+        <div className="div_summary_detials">
+
+          <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{temp_watch_data.length} movies</p>
+          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>8.65</p>
+          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>9.5</p>
+          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>136 min</p>
 
 
         </div>
 
-        <div className="div_section_right_movies_list">
+
+  </div>
+
+  )
+}
+
+
+function Div_section_right_movies_list_component({temp_watch_data}) {
+
+  return (
+
+    <div className="div_section_right_movies_list">
 
         <ul className="ul_movies_list">
           {temp_watch_data.map((val) => (
@@ -55,7 +84,7 @@ temp_watch_data, set_temp_watch_data
                   <p className="text_imdb_rating"><span className="start_imdb_rating">⭐</span>{val.imdbRating}</p>
                   <p className="text_user_rating"><span className="star_user_rating">🌟</span>{val.userRating}</p>
                   <p className="text_movie_duration"><span className="icon_moview_duration">⏳</span>{val.runtime} min</p>
-                   
+                  
                 </div>
                 
 
@@ -66,17 +95,7 @@ temp_watch_data, set_temp_watch_data
         </ul>
 
 
-        </div>
-      
-      </>}
+    </div>
+  )
 
-
-
-
-
-
-
-    </section>
-
-  );
 }

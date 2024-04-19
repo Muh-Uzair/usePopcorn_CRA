@@ -1,11 +1,10 @@
 
 
 import { Section_right_component } from "./components_folder/Section_right_component";
-import { Section_left_component } from "./components_folder/Section_left_component";
+// import { Section_left_component } from "./components_folder/Section_left_component";
 import { useState } from "react";
 import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component, Founded_results_component } from "./components_folder/Nav_bar_component";
-
-
+import { Btn_plus_minus_comoonent } from "./components_folder/generic_components";
 // This movies data will be shown when we first load the app
 export const tempMovieDataDummy = [
   {
@@ -66,6 +65,9 @@ export default function App() {
   const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
   const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy)
 
+  
+  const [btn_plus_minus, set_btn_plus_minus] = useState(true);
+
 
 
 
@@ -90,17 +92,15 @@ export default function App() {
       
       >
 
+
         <Section_left_component 
-        temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data}
+        btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus}
 
         >
-
-
+                <Movie_list_component 
+                temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />
 
         </Section_left_component>
-
-
-
 
 
 
@@ -109,14 +109,85 @@ export default function App() {
         temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
         
         >
+
         </Section_right_component>
 
+ 
 
       </Main_component>
 
     </div>
   )
 }
+
+
+
+function Section_left_component({
+
+  children, btn_plus_minus, set_btn_plus_minus,
+
+}) {
+
+
+
+  return (
+
+    <section className="section_left">
+
+      <Btn_plus_minus_comoonent
+        btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus} />
+
+      {btn_plus_minus && 
+      children
+      }
+
+
+    </section>
+
+  );
+}
+function Movie_list_component({
+
+  tempMovieData, temp_movie_data, set_temp_movie_data,
+
+}) {
+
+  return (
+
+    <ul className="ul_movies_list">
+      {temp_movie_data.map((val) => (
+        <li key={val.Title}>
+
+          <div className="div_movie_poster">
+            <img className="img_movie_poster" src={val.Poster} />
+          </div>
+
+
+          <div className="div_movie_text">
+            <p className="movie_name">{val.Title}</p>
+            <p className="text_movie_release_year">🗓 {val.Year}</p>
+
+          </div>
+
+        </li>
+      ))}
+    </ul>
+
+
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
