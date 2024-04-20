@@ -1,20 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './css_folder/index.css';
-import './css_folder/nav_bar_styles.css';
-import './css_folder/section_left_styles.css';
-import './css_folder/section_right_styles.css';
+
+
+// import './css_folder/index.css';
+// import './css_folder/nav_bar_styles.css';
+// import './css_folder/section_left_styles.css';
+// import './css_folder/section_right_styles.css';
 
 
 
 
 
-import App from './App';
+// import App from './App';
+import Start_rating_component from './start_rating_component';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <Start_rating_component total_stars={5}/>
+
   </React.StrictMode>
 );
 
