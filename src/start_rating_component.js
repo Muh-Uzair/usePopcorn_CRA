@@ -1,11 +1,8 @@
 import { useState } from "react"
+import PropTypes from "prop-types"
 
 
 
-const number_of_stars_styles = {
-    margin:"0px" ,
-    lineHeight:"1"       
-}
 
 const div_all_contain_styles = {
     display:"flex",
@@ -22,7 +19,41 @@ const div_stars_styles ={
 
 
 
-export default function Start_rating_component({total_stars=5}) {
+
+Start_rating_component.propTypes = {
+    total_stars: PropTypes.number ,   
+    color : PropTypes.string ,
+    text_size : PropTypes.number ,
+    font_family : PropTypes.string , 
+
+}
+
+
+export default function Start_rating_component({
+
+total_stars=5 ,
+
+color = "#fcc419" ,
+
+text_size = 38 ,
+font_family ="gilroy" ,
+
+star_size=48 ,
+
+messages_arr=[],
+
+movie_rating_outside ,
+set_movie_rating_outside ,
+
+}) {
+
+                        const number_of_stars_styles = {
+                            margin:"0px" ,
+                            lineHeight:"1" ,
+                            color:color,
+                            fontSize:`${text_size}px` , 
+                            fontFamily : font_family ,     
+                        }
 
 
 
@@ -30,6 +61,7 @@ export default function Start_rating_component({total_stars=5}) {
                     //_________________________________________________________________________________________    
                         function handle_stars_click_function(event_info_object, rating_value) {
                             set_rating(rating_value) ;
+                            set_movie_rating_outside(rating_value) ;
                         }
 
 
@@ -63,13 +95,19 @@ export default function Start_rating_component({total_stars=5}) {
                     on_mouse_out_function={on_mouse_out_function}
                     rating_value={i+1}
                     full={ i < hover_rating  ? true   :  i < rating ? true : false }
+                    color={color}
+                    star_size={star_size}
                     />
 
 
                 ))}
             </div>
 
-            <p className="number_of_stars" style={number_of_stars_styles}>{hover_rating || rating || ""}</p>           
+            <p className="number_of_stars" style={number_of_stars_styles}>{ messages_arr.length !== 0 && messages_arr.length === total_stars ? 
+            hover_rating ? messages_arr[hover_rating-1] : 
+            rating ? messages_arr[rating-1] : ""   
+
+            : hover_rating || rating || ""}</p>           
 
         </div>
     )
@@ -79,13 +117,10 @@ export default function Start_rating_component({total_stars=5}) {
 
 
 
-const star_styles = {
 
-    width:"48px" ,
-    heiht:"48px" ,
-    display:"block" ,
-    cursor:"Pointer" ,
-}
+
+
+
 
 
 
@@ -95,8 +130,26 @@ on_mouse_enter_function ,
 on_mouse_out_function ,
 rating_value ,
 full ,
+color ,
+star_size,
 }) {
 
+
+                        const star_styles = {
+
+                            width:`${star_size}px`,
+                            heiht:`${star_size}px`,
+                            display:"block" ,
+                            cursor:"Pointer" ,
+                        }
+
+
+
+
+    
+
+    
+//--------------------------------------------------------------------------------------------
     return(
 
         <span 
@@ -111,8 +164,8 @@ full ,
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="#000"
-                stroke="#000"
+                fill={color}
+                stroke={color}
                 >
                 <path
                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
@@ -125,7 +178,7 @@ full ,
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="#000"
+                stroke={color}
                 >
                 <path
                 strokeLinecap="round"
@@ -140,4 +193,6 @@ full ,
 
         
     )
+//--------------------------------------------------------------------------------------------
+
 }
