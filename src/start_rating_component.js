@@ -24,11 +24,31 @@ const div_stars_styles ={
 
 export default function Start_rating_component({total_stars=5}) {
 
-    const [rating , set_rating] = useState(0) ;
-    function handle_stars_click_function(event_info_object, rating_value) {
-        set_rating(rating_value) ;
-    }
 
+
+                        const [rating , set_rating] = useState(0) ;
+                    //_________________________________________________________________________________________    
+                        function handle_stars_click_function(event_info_object, rating_value) {
+                            set_rating(rating_value) ;
+                        }
+
+
+
+
+
+                        const [hover_rating , set_hover_rating] = useState(0) ;
+                    //_________________________________________________________________________________________
+                        function on_mouse_enter_function(event_info_object , rating_value){                            
+                            set_hover_rating(rating_value)
+                        }
+                    //_________________________________________________________________________________________            
+                        function on_mouse_out_function(event_info_object) {
+                            set_hover_rating(0) ;
+                        }
+
+
+
+//------------------------------------------------------------------------------------------------------l
     return(
 
         <div className="div_all_contain" style={div_all_contain_styles}>
@@ -39,18 +59,22 @@ export default function Start_rating_component({total_stars=5}) {
 
                     <Stars key={i} 
                     handle_stars_click_function={handle_stars_click_function}
+                    on_mouse_enter_function={on_mouse_enter_function}
+                    on_mouse_out_function={on_mouse_out_function}
                     rating_value={i+1}
-                    full={i < rating ? true : false }
+                    full={ i < hover_rating  ? true   :  i < rating ? true : false }
                     />
 
 
                 ))}
             </div>
 
-            <p className="number_of_stars" style={number_of_stars_styles}>{rating ? rating : ""}</p>           
+            <p className="number_of_stars" style={number_of_stars_styles}>{hover_rating || rating || ""}</p>           
 
         </div>
     )
+//------------------------------------------------------------------------------------------------------l
+    
 }
 
 
@@ -67,13 +91,21 @@ const star_styles = {
 
 function Stars({
 handle_stars_click_function ,
+on_mouse_enter_function ,
+on_mouse_out_function ,
 rating_value ,
 full ,
 }) {
 
     return(
 
-        <span role="button" style={star_styles} onClick={(e) => handle_stars_click_function(e , rating_value)}>
+        <span 
+        role="button" 
+        style={star_styles} 
+        onClick={(e) => handle_stars_click_function(e , rating_value)}
+        onMouseEnter={(e) => on_mouse_enter_function(e , rating_value)} 
+        onMouseLeave={(e) => on_mouse_out_function(e)}
+        >
 
                 { full ? 
                 <svg
