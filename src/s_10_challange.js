@@ -11,7 +11,7 @@ export default function App() {
 
             <Text_expander_component 
             >
-            Paragraph 1: Use elements when you want more explicit control over what you're passing to a 
+            Paragraph 1: Use, elements when, you% want more explicit control over what you're passing to a 
             component. This allows you to pass specific components or elements as props, which 
             can be useful for customization or conditional rendering.This allows you to pass specific components or elements as props, which 
             can be useful for customization or conditional rendering.This allows you to pass specific components or elements as props, which 
@@ -57,12 +57,16 @@ children ,
                         cursor:"pointer" ,
                         }
 
-                        // const paragraph = children ;
+                        const paragraph = children ;
 
-                        // const words = paragraph.match(/\b\w+\b/g);
+                        const words = paragraph.match(/[\w\S]+/g);
 
-                        // // Extracting the first 10 words
-                        // const first10Words = words.slice(0, 10).join(" ");
+                        // Extracting the first 10 words
+                        const first10Words = words.slice(0, 10).join(" ");
+
+
+
+                        
 
                         
                        
@@ -80,7 +84,7 @@ children ,
     return(
         <>
             <div>
-                {show_status ? children : "..."}
+                {show_status ? children :first10Words+"..."}
                 <span 
                 style={show_text_btn_styles}
                 onClick={()=> handle_status_change_function()}
