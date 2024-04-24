@@ -2,9 +2,12 @@
 
 
 // import { Section_left_component } from "./components_folder/Section_left_component";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component, Founded_results_component } from "./components_folder/Nav_bar_component";
 import { Btn_plus_minus_comoonent } from "./components_folder/generic_components";
+
+
+
 // This movies data will be shown when we first load the app
 export const tempMovieDataDummy = [
   {
@@ -57,13 +60,66 @@ const tempWatchedDataDummy = [
 
 
 
+const API_KEY = "d8e2a0b7" ;
+const movie_name = 'ffvdeb' ;
+
+
 
 
 
 export default function App() {
 
   const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
-  const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy)
+  const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy) ;
+  const [is_loading , set_is_loading] = useState(false) ;
+  const [error_msg , set_error_msg] = useState("") ;
+
+
+
+  useEffect( function() {
+
+
+    //----------
+    async function fetch_movies_data() {
+
+      try{
+        
+        set_is_loading(true) ;
+        const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${movie_name}`) ;
+        if(res.ok === false) {
+          throw new Error("Error_occured") ; 
+        }
+
+        const data = await res.json() ;
+        if(data.Response === "False"){
+          throw new Error("❌ Movie not found") ;
+        }
+
+
+        // console.log(data.Search) ;
+
+        set_temp_movie_data(data.Search)
+        
+
+
+      }
+      catch(err_obj){
+        
+        console.log(err_obj)
+        set_error_msg(err_obj.message)      
+        
+      }
+      finally{
+        set_is_loading(false)
+      }
+
+
+    }
+    //------------
+
+    fetch_movies_data() ;
+
+  } , [] )
 
   
   
@@ -95,8 +151,15 @@ export default function App() {
 
               <Section_component >
 
-                      <Movie_list_component 
-                      temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />
+                {/* {is_loading ? <Loader_component/> :  <Movie_list_component 
+                                                     temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} /> } */}
+
+                {is_loading && <Loader_component />}
+                {error_msg && <Error_component error_msg={error_msg}/>}
+                {!is_loading && !error_msg && <Movie_list_component 
+                                                     temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />}
+
+                     
 
               </Section_component>
 
@@ -165,7 +228,7 @@ function Movie_list_component({
 
     <ul className="ul_movies_list">
       {temp_movie_data.map((val) => (
-        <li key={val.Title}>
+        <li key={val.imdbID}>
 
           <div className="div_movie_poster">
             <img className="img_movie_poster" src={val.Poster} />
@@ -183,6 +246,25 @@ function Movie_list_component({
 
 
   );
+}
+function Loader_component() {
+
+  return(
+    <div className="div_loader_component">
+      Loading...
+    </div>
+  )
+}
+function Error_component({error_msg}) {
+
+  console.log(error_msg)
+  
+  return(
+    <div className="div_loader_component">
+      {error_msg}
+    </div>
+  )
+
 }
 
 

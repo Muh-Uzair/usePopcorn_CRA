@@ -101,7 +101,7 @@
 .ul_movies_list li {
 
     width: 100%;
-    height: 90px;
+    height: 100px;
     background-color: rgba(96, 141, 126, 0);
 
 
@@ -119,7 +119,7 @@
 .img_movie_poster{
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 14px;
 
 
     background-color: aquamarine;
@@ -136,7 +136,7 @@
     font-family: Gilroy;
     font-weight: 700;
     letter-spacing: 1px;
-    font-size: 20px;
+    font-size: 17px;
 
     margin-bottom: 0px;
     
