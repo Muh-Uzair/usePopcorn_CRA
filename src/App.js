@@ -120,7 +120,7 @@ export default function App() {
     }
     //------------
 
-    if(!inputed_movie_name) return ;
+    if(inputed_movie_name.length === 0)  return ;
     fetch_movies_data() ;
 
   } , [inputed_movie_name] )
@@ -140,6 +140,9 @@ export default function App() {
         <Logo_plus_name_component />
         <Input_movie_name_component 
         inputed_movie_name={inputed_movie_name} set_inputed_movie_name={set_inputed_movie_name} 
+        set_error_msg={set_error_msg}
+        set_temp_movie_data={set_temp_movie_data}
+
         />
         <Founded_results_component temp_movie_data={temp_movie_data} />
 

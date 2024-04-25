@@ -31,6 +31,8 @@ export function Logo_plus_name_component() {
 }
 export function Input_movie_name_component({
 inputed_movie_name , set_inputed_movie_name ,
+set_error_msg,
+set_temp_movie_data ,
 }) {
 
   const [movie_name_dummy , set_movie_name_dummy] = useState("") ;
@@ -42,7 +44,20 @@ inputed_movie_name , set_inputed_movie_name ,
   function handle_form_submit(event_info_object) {
     event_info_object.preventDefault() ;
 
-    set_inputed_movie_name(inputed_movie_name => movie_name_dummy) ;
+    // console.log(movie_name_dummy.trim().length ) ;
+
+    if(movie_name_dummy.trim().length === 0 ) {
+      console.log(`yes`) ;
+      set_error_msg("❌ Input field empty!") ;
+      set_temp_movie_data([]) ;
+      set_inputed_movie_name("") ;
+    }
+    else if(movie_name_dummy.trim().length !== 0) {
+      set_inputed_movie_name(inputed_movie_name => movie_name_dummy) 
+    }
+
+
+    ;
     // console.log(movie_name_dummy.length) ;
 
     set_movie_name_dummy("") ;
