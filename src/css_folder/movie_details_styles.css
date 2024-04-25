@@ -1,0 +1,129 @@
+.div_movie_details{
+    width: 100%;
+    height: 100%;
+    background-color: #2a2f34;
+
+    display: grid;
+    grid-template-rows: 226px 200px 300px;
+
+    position: relative;
+}
+
+
+
+.div_btn_back_right{
+    position: absolute;
+    left: 7px;
+    top: 7px;
+
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    background-color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 10000;
+
+    
+}
+.div_btn_back_right:hover{
+    background-color: rgb(243, 243, 243);
+}
+.div_btn_back_right:active{
+    background-color: rgb(255, 255, 255);
+}
+.btn_back_right{  
+    font-family: impact;
+    font-weight: 700;
+    font-size: 20px;
+
+    margin-bottom: 5px;
+
+    background-color: rgba(240, 248, 255, 0);
+    border: none;
+
+    cursor: pointer;   
+    
+    padding: 10px;
+}
+
+
+
+
+
+
+
+
+.div_all_movie_details{
+
+    width: 100%;
+    /* background-color: rgb(84, 140, 121); */
+
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    column-gap: 20px;
+
+    border-top-left-radius: 10px;
+}
+
+.div_img_movie_poster_big{
+    width: 100%;
+    height: 100%;
+    /* background-color: aqua; */
+}
+.img_movie_poster_big{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    margin: 0px;
+}
+
+.div_all_movie_details_text{
+    background-color: rgb(241, 199, 145);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.div_rating_stars {
+    width: 100%;
+    background-color: bisque;
+}
+
+
+
+
+
+
+
+.div_short_movie_info{
+    width: 100%;
+    background-color: rgb(135, 157, 114);
+}

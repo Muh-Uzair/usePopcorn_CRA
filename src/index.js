@@ -6,6 +6,10 @@ import './css_folder/index.css';
 import './css_folder/nav_bar_styles.css';
 import './css_folder/section_left_styles.css';
 import './css_folder/section_right_styles.css';
+import './css_folder/movie_details_styles.css';
+
+
+
 
 
 

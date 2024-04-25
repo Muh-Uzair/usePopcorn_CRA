@@ -110,6 +110,11 @@
     display: grid;
 
     grid-template-columns: 100px 1fr;
+
+    cursor: pointer;
+}
+.ul_movies_list li:hover {
+    background-color: #363d43;
 }
 .div_movie_poster{
     /* background-color: aliceblue; */
