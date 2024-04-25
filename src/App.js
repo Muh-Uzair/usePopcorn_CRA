@@ -73,6 +73,7 @@ export default function App() {
   const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy) ;
   const [is_loading , set_is_loading] = useState(false) ;
   const [error_msg , set_error_msg] = useState("") ;
+  const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
 
 
 
@@ -85,14 +86,17 @@ export default function App() {
       try{
         
         set_is_loading(true) ;
-        const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${movie_name}`) ;
+        set_error_msg("") ; 
+        const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${inputed_movie_name}`) ;
         if(res.ok === false) {
           throw new Error("Error_occured") ; 
         }
 
         const data = await res.json() ;
         if(data.Response === "False"){
+          set_temp_movie_data([])
           throw new Error("❌ Movie not found") ;
+          
         }
 
 
@@ -104,8 +108,7 @@ export default function App() {
 
       }
       catch(err_obj){
-        
-        console.log(err_obj)
+   
         set_error_msg(err_obj.message)      
         
       }
@@ -117,9 +120,10 @@ export default function App() {
     }
     //------------
 
+    if(!inputed_movie_name) return ;
     fetch_movies_data() ;
 
-  } , [] )
+  } , [inputed_movie_name] )
 
   
   
@@ -134,8 +138,10 @@ export default function App() {
       <Nav_bar_component>
 
         <Logo_plus_name_component />
-        <Input_movie_name_component />
-        <Founded_results_component temp_movie_data={temp_movie_data}/>
+        <Input_movie_name_component 
+        inputed_movie_name={inputed_movie_name} set_inputed_movie_name={set_inputed_movie_name} 
+        />
+        <Founded_results_component temp_movie_data={temp_movie_data} />
 
       </Nav_bar_component>
 
@@ -151,14 +157,22 @@ export default function App() {
 
               <Section_component >
 
-                {/* {is_loading ? <Loader_component/> :  <Movie_list_component 
-                                                     temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} /> } */}
 
-                {is_loading && <Loader_component />}
-                {error_msg && <Error_component error_msg={error_msg}/>}
-                {!is_loading && !error_msg && <Movie_list_component 
-                                                     temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} />}
+                {is_loading ?<Loader_component msg={"LOADING..."} set_error_msg={set_error_msg} 
+                inputed_movie_name={inputed_movie_name} set_inputed_movie_name={set_inputed_movie_name} 
+                /> 
+                 : 
+                error_msg ? <Loader_component msg={error_msg} set_error_msg={set_error_msg} 
+                inputed_movie_name={inputed_movie_name} set_inputed_movie_name={set_inputed_movie_name} 
+                /> 
+                :
+                <Movie_list_component 
+                temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} 
+                
+                />  }
 
+
+                
                      
 
               </Section_component>
@@ -222,8 +236,12 @@ function Movie_list_component({
 
   temp_movie_data, set_temp_movie_data,
 
+
 }) {
 
+
+
+ if(temp_movie_data) {
   return (
 
     <ul className="ul_movies_list">
@@ -246,12 +264,23 @@ function Movie_list_component({
 
 
   );
+ }
+
+
 }
-function Loader_component() {
+function Loader_component({
+msg , set_error_msg , 
+inputed_movie_name, set_inputed_movie_name ,
+}) {
+
+
+
+
+
 
   return(
     <div className="div_loader_component">
-      Loading...
+      {msg}
     </div>
   )
 }
@@ -274,10 +303,14 @@ function Error_component({error_msg}) {
 
 
 
-//////////////////////////////////////////////////////////////
 
-  
-  
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////
 function Div_section_right_summary_component({
   temp_watch_data ,
 }) {

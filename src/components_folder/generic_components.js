@@ -1,10 +1,20 @@
 import { useState } from "react";
 
-export function Form_plus_input_component({form_class_name , input_class_name , input_place_holder}) {
+export function Form_plus_input_component({
+form_class_name , input_class_name , input_place_holder ,
+movie_name_dummy , set_inputed_movie_name ,
+handle_input_change ,
+handle_form_submit ,
+
+}) {
 
     return(
-    <form className={form_class_name} >
-        <input type="text" className={input_class_name} placeholder={input_place_holder} />
+    <form className={form_class_name} onSubmit={(e) => handle_form_submit(e)}>
+        <input 
+        type="text" className={input_class_name} placeholder={input_place_holder} 
+        value={movie_name_dummy} 
+        onChange={(e) => handle_input_change(e)}
+        />
      </form>
     )
 }
