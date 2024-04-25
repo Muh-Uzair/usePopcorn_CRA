@@ -61,7 +61,7 @@ const tempWatchedDataDummy = [
 
 
 const API_KEY = "d8e2a0b7" ;
-const movie_name = 'ffvdeb' ;
+const movie_name = 'Matrix' ;
 
 
 
