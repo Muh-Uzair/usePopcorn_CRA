@@ -302,6 +302,7 @@ movie_clicked , set_movie_clicked
 
   const [big_movie_details_obj , set_big_movie_details_obj] = useState({})
   const [movie_rating , set_movie_rating] = useState(0) ;
+  
 
   
 
@@ -316,10 +317,6 @@ movie_clicked , set_movie_clicked
 
         const data = await res.json() ;
         set_big_movie_details_obj(data) ;
-
-        
-
-        
 
       }
       catch(err) {
@@ -373,8 +370,11 @@ movie_clicked , set_movie_clicked
 
         <div className="div_inner_rating_stars">
           <Start_rating_component 
-          total_stars={10} text_size={30} star_size={30}  
-          movie_rating_outside={movie_rating} set_movie_rating_outside={set_movie_rating}/>
+          total_stars={10} text_size={26} star_size={30}  
+          movie_rating_outside={movie_rating} set_movie_rating_outside={set_movie_rating}
+          key={big_movie_details_obj.imdbID}
+          />
+          
         </div>
         
       </div>

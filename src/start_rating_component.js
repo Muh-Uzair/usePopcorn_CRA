@@ -5,9 +5,12 @@ import PropTypes from "prop-types"
 
 
 const div_all_contain_styles = {
-    display:"flex",
-    alignItems:"center" , 
-    gap:"16px" ,
+    display:"grid",
+    gridTemplateColumns : "1fr 30px" ,
+    columnGap: "10px" , 
+    // alignItems:"center" , 
+    // gap:"16px" ,
+    marginLeft:"16px" ,
 
 }
 
@@ -46,6 +49,7 @@ movie_rating_outside ,
 
 set_movie_rating_outside ,
 
+recieved_key ,
 
 
 }) {
@@ -64,7 +68,7 @@ set_movie_rating_outside ,
                     //_________________________________________________________________________________________    
                         function handle_stars_click_function(event_info_object, rating_value) {
                             set_rating(rating_value) ;
-                            set_movie_rating_outside(rating_value) ;
+                        
                         }
 
 
