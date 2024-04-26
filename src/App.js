@@ -193,13 +193,14 @@ export default function App() {
 
               <Section_component            
               >
-                {!movie_clicked && 
+                {/* {!movie_clicked && 
                 <>
                       <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
                       <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
-                </>}
+                </>
+                } */}
 
-                {movie_clicked && 
+                {/* {movie_clicked && 
                 <>
                       {is_loading_details ? <Loader_component msg={"LOADING..."}/> : 
                       <Movie_details_component 
@@ -208,7 +209,19 @@ export default function App() {
                       big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
                       />
                     }
-                </>}
+                </>} */}
+
+                {movie_clicked ? is_loading_details ? <Loader_component msg={"LOADING..."}/> : <Movie_details_component 
+                      movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
+                      movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
+                      big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
+                      /> : 
+                      <>
+                      <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
+                      <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
+                      </>
+
+                }
 
 
                 
@@ -460,11 +473,12 @@ function Movie_list_component({
       try{
 
         
-
+        set_is_loading_details(true)
         const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
 
         const data = await res.json() ;
         set_big_movie_details_obj( prev=>  data) ;
+        
 
         
 
@@ -473,7 +487,7 @@ function Movie_list_component({
 
       }
       finally{
-
+        set_is_loading_details(false)        
       }
 
 
@@ -481,7 +495,7 @@ function Movie_list_component({
 
     get_movie_details() ;
 
-  })
+  }, [movie_details_obj.imdbID])
 
 
   
