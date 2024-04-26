@@ -68,7 +68,7 @@ recieved_key ,
                     //_________________________________________________________________________________________    
                         function handle_stars_click_function(event_info_object, rating_value) {
                             set_rating(rating_value) ;
-                        
+                            set_movie_rating_outside(rating_value)                        
                         }
 
 
@@ -79,6 +79,7 @@ recieved_key ,
                     //_________________________________________________________________________________________
                         function on_mouse_enter_function(event_info_object , rating_value){                            
                             set_hover_rating(rating_value)
+                            
                         }
                     //_________________________________________________________________________________________            
                         function on_mouse_out_function(event_info_object) {

@@ -211,11 +211,13 @@ export default function App() {
                     }
                 </>} */}
 
-                {movie_clicked ? is_loading_details ? <Loader_component msg={"LOADING..."}/> : <Movie_details_component 
+                {movie_clicked ? is_loading_details ? <Loader_component msg={"LOADING..."}/> : 
+                <Movie_details_component 
                       movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
                       movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
                       big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
-                      /> : 
+                      /> 
+                      : 
                       <>
                       <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
                       <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
@@ -321,6 +323,8 @@ big_movie_details_obj , set_big_movie_details_obj ,
 
   // console.log(movie_details_obj) ;
 
+  const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
+
   
 
   
@@ -356,19 +360,33 @@ big_movie_details_obj , set_big_movie_details_obj ,
         
       </div>
 
+
+
       <div className="div_rating_stars">
 
-        <div className="div_inner_rating_stars">
-          <Start_rating_component 
-          total_stars={10} text_size={26} star_size={30}  
-          key={big_movie_details_obj.imdbID}
-          />
+        <div className={ movie_rating_by_user > 0 ? "div_inner_rating_stars_btn" : "div_inner_rating_stars"}>
+          
+          <div className={movie_rating_by_user > 0 ? "div_inner_inner_rating_stars_btn" : ""}>
+              <Start_rating_component 
+              total_stars={10} text_size={26} star_size={28}  
+              key={big_movie_details_obj.imdbID}
+              set_movie_rating_outside={set_movie_rating_by_user}
+              />
+          </div>
+
+          {movie_rating_by_user > 0 && 
+          <button className="btn_add_to_list">+ Add to list</button>
+          }
+
+
           
         </div>
         
       </div>
 
-      <div className="div_short_movie_info">
+
+
+      <div className="div_short_movie_info" style={movie_rating_by_user > 0 ? {marginTop:"60px"} : {marginTop:"0px"} }>
 
 
         <p><em>{big_movie_details_obj.Plot}</em></p>
@@ -378,6 +396,7 @@ big_movie_details_obj , set_big_movie_details_obj ,
 
         
       </div>
+
 
       <div className="div_btn_back_right">
           <button className="btn_back_right" onClick={(e) => set_movie_clicked(false)}>&larr;</button>
