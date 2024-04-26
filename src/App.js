@@ -75,7 +75,9 @@ export default function App() {
   const [error_msg , set_error_msg] = useState("") ;
   const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
   const [movie_clicked , set_movie_clicked] = useState(false) ;
-  const [movie_details_obj , set_movie_details_obj] = useState("")
+  const [movie_details_obj , set_movie_details_obj] = useState("") ; 
+  const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
+  const [is_loading_details , set_is_loading_details] = useState(false) ;
   
 
 
@@ -175,6 +177,8 @@ export default function App() {
                 temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} 
                 movie_clicked={movie_clicked}  set_movie_clicked={set_movie_clicked}
                 movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
+                big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
+                is_loading_details={is_loading_details} set_is_loading_details={set_is_loading_details}
                 
                 />  }
 
@@ -197,10 +201,13 @@ export default function App() {
 
                 {movie_clicked && 
                 <>
+                      {is_loading_details ? <Loader_component msg={"LOADING..."}/> : 
                       <Movie_details_component 
                       movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
                       movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
+                      big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
                       />
+                    }
                 </>}
 
 
@@ -295,43 +302,13 @@ function Div_section_right_movies_list_component({temp_watch_data}) {
 }
 function Movie_details_component({
 movie_details_obj , set_movie_details_obj ,
-movie_clicked , set_movie_clicked
+movie_clicked , set_movie_clicked ,
+big_movie_details_obj , set_big_movie_details_obj ,
 }) {
 
   // console.log(movie_details_obj) ;
 
-  const [big_movie_details_obj , set_big_movie_details_obj] = useState({})
-  const [movie_rating , set_movie_rating] = useState(0) ;
   
-
-  
-
-
-  useEffect(function() {
-
-    async function get_movie_details(){
-
-      try{
-
-        const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
-
-        const data = await res.json() ;
-        set_big_movie_details_obj(data) ;
-
-      }
-      catch(err) {
-
-      }
-      finally{
-
-      }
-
-
-    }
-
-    get_movie_details() ;
-
-  },)
 
   
 
@@ -345,7 +322,7 @@ movie_clicked , set_movie_clicked
       <div className="div_all_movie_details">
 
         <div className="div_img_movie_poster_big">
-            <img className="img_movie_poster_big" src={movie_details_obj.Poster} />
+            <img className="img_movie_poster_big" src={big_movie_details_obj.Poster} />
         </div>
 
         
@@ -371,7 +348,6 @@ movie_clicked , set_movie_clicked
         <div className="div_inner_rating_stars">
           <Start_rating_component 
           total_stars={10} text_size={26} star_size={30}  
-          movie_rating_outside={movie_rating} set_movie_rating_outside={set_movie_rating}
           key={big_movie_details_obj.imdbID}
           />
           
@@ -398,13 +374,6 @@ movie_clicked , set_movie_clicked
   )
 }
 //////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
 
 
 
@@ -449,6 +418,8 @@ function Movie_list_component({
   temp_movie_data, set_temp_movie_data,
   movie_clicked, set_movie_clicked ,
   movie_details_obj , set_movie_details_obj ,
+  big_movie_details_obj , set_big_movie_details_obj ,
+  is_loading_details , set_is_loading_details ,
 
 
 }) {
@@ -471,6 +442,46 @@ function Movie_list_component({
     set_movie_details_obj(recieved_movie_details_obj) ;  
     
   }
+
+
+
+
+  
+  
+  
+
+  
+
+
+  useEffect(function() {
+
+    async function get_movie_details(){
+
+      try{
+
+        
+
+        const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
+
+        const data = await res.json() ;
+        set_big_movie_details_obj( prev=>  data) ;
+
+        
+
+      }
+      catch(err) {
+
+      }
+      finally{
+
+      }
+
+
+    }
+
+    get_movie_details() ;
+
+  })
 
 
   
