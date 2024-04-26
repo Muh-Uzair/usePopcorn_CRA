@@ -43,7 +43,10 @@ star_size=48 ,
 messages_arr=[],
 
 movie_rating_outside ,
+
 set_movie_rating_outside ,
+
+
 
 }) {
 

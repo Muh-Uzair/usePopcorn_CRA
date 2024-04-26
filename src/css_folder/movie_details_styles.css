@@ -4,9 +4,11 @@
     background-color: #2a2f34;
 
     display: grid;
-    grid-template-rows: 226px 200px 300px;
+    grid-template-rows: 226px 130px 300px;
 
     position: relative;
+
+    overflow: hidden;
 }
 
 
@@ -57,6 +59,8 @@
 
 
 
+
+
 .div_all_movie_details{
 
     width: 100%;
@@ -64,7 +68,7 @@
 
     display: grid;
     grid-template-columns: 150px 1fr;
-    column-gap: 20px;
+    column-gap: 30px;
 
     border-top-left-radius: 10px;
 }
@@ -81,8 +85,42 @@
     margin: 0px;
 }
 
+
+
+
+
+
+
+
 .div_all_movie_details_text{
-    background-color: rgb(241, 199, 145);
+    background-color: rgba(241, 199, 145, 0);
+    
+    font-family: gilroy;    
+    
+    
+}
+.text_movie_title_big{
+
+    font-family: gilroy;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+
+    margin-top: 20px;    
+    margin-bottom: 0px;
+}
+.text_date_movie_time{
+
+    color: white;
+    
+    
+}
+.text_movie_type{
+    color: white;
+}
+
+.text_imdb_rating_right{
+    color: white;
 }
 
 
@@ -114,8 +152,39 @@
 
 .div_rating_stars {
     width: 100%;
-    background-color: bisque;
+    background-color: rgba(255, 228, 196, 0);
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 20px;
+
+    
 }
+.div_inner_rating_stars{
+
+    width: 360px;
+    height: 90px;
+    background-color: rgb(56, 68, 74);
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,5 +194,17 @@
 
 .div_short_movie_info{
     width: 100%;
-    background-color: rgb(135, 157, 114);
+    background-color: rgba(135, 157, 114, 0);
+
+    margin-top: 20px;
+
+   
+}
+
+.div_short_movie_info p{
+    margin-left: 50px;
+    margin-right: 40px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(242, 242, 242);
 }

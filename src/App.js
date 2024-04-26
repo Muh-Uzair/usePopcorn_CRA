@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component, Founded_results_component } from "./components_folder/Nav_bar_component";
 import { Btn_plus_minus_comoonent } from "./components_folder/generic_components";
-
+import Start_rating_component from "./start_rating_component"
 
 
 // This movies data will be shown when we first load the app
@@ -173,7 +173,7 @@ export default function App() {
                 :
                 <Movie_list_component 
                 temp_movie_data={temp_movie_data} set_temp_movie_data={set_temp_movie_data} 
-                set_movie_clicked={set_movie_clicked}
+                movie_clicked={movie_clicked}  set_movie_clicked={set_movie_clicked}
                 movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
                 
                 />  }
@@ -298,7 +298,45 @@ movie_details_obj , set_movie_details_obj ,
 movie_clicked , set_movie_clicked
 }) {
 
-  console.log(movie_details_obj) ;
+  // console.log(movie_details_obj) ;
+
+  const [big_movie_details_obj , set_big_movie_details_obj] = useState({})
+  const [movie_rating , set_movie_rating] = useState(0) ;
+
+  
+
+
+  useEffect(function() {
+
+    async function get_movie_details(){
+
+      try{
+
+        const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
+
+        const data = await res.json() ;
+        set_big_movie_details_obj(data) ;
+
+        
+
+        
+
+      }
+      catch(err) {
+
+      }
+      finally{
+
+      }
+
+
+    }
+
+    get_movie_details() ;
+
+  },)
+
+  
 
 
 
@@ -317,7 +355,13 @@ movie_clicked , set_movie_clicked
 
         <div className="div_all_movie_details_text">
 
-          <p className="text_movie_title_big">{movie_details_obj.Title}</p>
+          <p className="text_movie_title_big">{big_movie_details_obj.Title}</p>
+          <p className="text_date_movie_time"> 
+            <span className="text_realease_dat">{big_movie_details_obj.Released}</span>
+            - 
+            <span className="text_movie_duration_right">{big_movie_details_obj.Runtime}</span> </p>
+          <p className="text_movie_type">{big_movie_details_obj.Genre}</p>
+          <p className="text_imdb_rating_right">⭐ {big_movie_details_obj.imdbRating} IMDb rating</p>
 
         </div>
 
@@ -326,10 +370,23 @@ movie_clicked , set_movie_clicked
       </div>
 
       <div className="div_rating_stars">
+
+        <div className="div_inner_rating_stars">
+          <Start_rating_component 
+          total_stars={10} text_size={30} star_size={30}  
+          movie_rating_outside={movie_rating} set_movie_rating_outside={set_movie_rating}/>
+        </div>
         
       </div>
 
       <div className="div_short_movie_info">
+
+
+        <p><em>{big_movie_details_obj.Plot}</em></p>
+        <p>Starring {big_movie_details_obj.Actors}</p>
+        <p>Directed by {big_movie_details_obj.Director}</p>
+
+
         
       </div>
 
@@ -390,24 +447,33 @@ function Section_component({
 function Movie_list_component({
 
   temp_movie_data, set_temp_movie_data,
-  set_movie_clicked ,
+  movie_clicked, set_movie_clicked ,
   movie_details_obj , set_movie_details_obj ,
 
 
 }) {
 
 
+  
+
+
 
   
   function handle_movie_click(e , recieved_movie_details_obj) {
 
-    console.log("movie clicked")
+    
+    if(movie_details_obj === recieved_movie_details_obj ) {
+      set_movie_clicked(!movie_clicked) ;
+      return ;
+    }
+    
     set_movie_clicked(true) ;
     set_movie_details_obj(recieved_movie_details_obj) ;  
     
   }
 
 
+  
 
 
 
