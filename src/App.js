@@ -41,7 +41,7 @@ const tempWatchedDataDummy = [
     Year: "2010",
     Poster:
       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-    runtime: 148,
+    runtime: "148 min",
     imdbRating: 8.8,
     userRating: 10,
   },
@@ -51,7 +51,7 @@ const tempWatchedDataDummy = [
     Year: "1985",
     Poster:
       "https://static.posters.cz/image/750/posters/back-to-the-future-i2795.jpg",
-    runtime: 116,
+    runtime: "116 min",
     imdbRating: 8.5,
     userRating: 9,
   },
@@ -216,10 +216,12 @@ export default function App() {
                       movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
                       movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
                       big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
+                      temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
                       /> 
                       : 
                       <>
-                      <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
+                      <Div_section_right_summary_component 
+                      temp_watch_data={temp_watch_data} />
                       <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
                       </>
 
@@ -250,10 +252,57 @@ export default function App() {
 
 
 
+
+
+
+
+
 //////////////////////////////////////////////////////////////
 function Div_section_right_summary_component({
   temp_watch_data ,
+
 }) {
+
+  // console.log(temp_watch_data) ;
+
+  const [average_user_rating , set_average_user_rating] = useState(0) ;
+  let avg_usr_rat = 0 ;
+
+  const [average_imdb_rating , set_average_imdb_rating] = useState(0) ;
+  let avg_imdb_rat = 0 ;
+
+  const [average_duration , set_average_duration] = useState(0) ;
+  let avg_dur = 0 ;
+
+  
+  
+  useEffect(function() {
+
+    temp_watch_data.map( (val) => {
+
+      avg_usr_rat = avg_usr_rat + val.userRating ;   
+      avg_imdb_rat = avg_imdb_rat + parseFloat(val.imdbRating) ;
+
+      let index_of_space = val.runtime.indexOf(" ") ;
+
+      // console.log(val.runtime , index_of_space) ;
+      // console.log(parseInt( val.runtime.slice(0 , index_of_space)))
+      // console.log(" ")
+
+      avg_dur = avg_dur + parseInt( val.runtime.slice(0 , index_of_space) )
+  
+    })
+
+    set_average_user_rating( ((avg_usr_rat/temp_watch_data.length)).toFixed(1) ) ;
+    set_average_imdb_rating( ((avg_imdb_rat/temp_watch_data.length)).toFixed(1) ) ;
+    set_average_duration(  Math.trunc((avg_dur/temp_watch_data.length))  ) ;
+
+
+    
+  })
+  
+
+
 
   return(
 
@@ -265,9 +314,9 @@ function Div_section_right_summary_component({
         <div className="div_summary_detials">
 
           <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{temp_watch_data.length} movies</p>
-          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>8.65</p>
-          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>9.5</p>
-          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>136 min</p>
+          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>{average_imdb_rating}</p>
+          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>{average_user_rating}</p>
+          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>{average_duration} min</p>
 
 
         </div>
@@ -299,7 +348,7 @@ function Div_section_right_movies_list_component({temp_watch_data}) {
 
                   <p className="text_imdb_rating"><span className="start_imdb_rating">⭐</span>{val.imdbRating}</p>
                   <p className="text_user_rating"><span className="star_user_rating">🌟</span>{val.userRating}</p>
-                  <p className="text_movie_duration"><span className="icon_moview_duration">⏳</span>{val.runtime} min</p>
+                  <p className="text_movie_duration"><span className="icon_moview_duration">⏳</span>{val.runtime}</p>
                   
                 </div>
                 
@@ -319,11 +368,63 @@ function Movie_details_component({
 movie_details_obj , set_movie_details_obj ,
 movie_clicked , set_movie_clicked ,
 big_movie_details_obj , set_big_movie_details_obj ,
+temp_watch_data, set_temp_watch_data ,
+
 }) {
 
   // console.log(movie_details_obj) ;
 
   const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
+
+
+  function check_duplication_in_temp_movie_data_function(){
+
+    let flag = true ;
+
+    temp_watch_data.map( (val) => {
+
+      if(val.imdbID === big_movie_details_obj.imdbID ) {
+        flag = false ;
+      }
+
+    } )
+
+    return flag ;
+
+  }
+
+
+  function handle_add_to_list_btn_click_function(event_info_object) {
+    
+    
+
+    const movie_details_for_pushing = {
+
+      imdbID: big_movie_details_obj.imdbID,
+      Title: big_movie_details_obj.Title,
+      Year: big_movie_details_obj.Year,
+      Poster:big_movie_details_obj.Poster,
+      runtime: big_movie_details_obj.Runtime,
+      imdbRating: big_movie_details_obj.imdbRating,
+      userRating: movie_rating_by_user ,
+      
+    }
+
+
+    if(check_duplication_in_temp_movie_data_function()){
+
+      set_temp_watch_data([...temp_watch_data , movie_details_for_pushing]) ;
+      set_movie_clicked(false)
+      
+    }
+    else if(!check_duplication_in_temp_movie_data_function()){
+      set_movie_clicked(false)
+      return
+    }
+    
+
+    
+  }
 
   
 
@@ -368,14 +469,14 @@ big_movie_details_obj , set_big_movie_details_obj ,
           
           <div className={movie_rating_by_user > 0 ? "div_inner_inner_rating_stars_btn" : ""}>
               <Start_rating_component 
-              total_stars={10} text_size={26} star_size={28}  
+              total_stars={10} text_size={24} star_size={28}  
               key={big_movie_details_obj.imdbID}
               set_movie_rating_outside={set_movie_rating_by_user}
               />
           </div>
 
           {movie_rating_by_user > 0 && 
-          <button className="btn_add_to_list">+ Add to list</button>
+          <button className="btn_add_to_list" onClick={(e) => handle_add_to_list_btn_click_function(e)}>+ Add to list</button>
           }
 
 
@@ -527,7 +628,9 @@ function Movie_list_component({
 
     <ul className="ul_movies_list">
       {temp_movie_data.map((val) => (
-        <li key={val.imdbID} onClick={(e) => handle_movie_click(e , val)}>
+        <li key={val.imdbID} onClick={(e) => handle_movie_click(e , val)}
+        style={movie_details_obj.imdbID === val.imdbID ? {backgroundColor:"#393f46"} : {} }
+        >
 
           <div className="div_movie_poster">
             <img className="img_movie_poster" src={val.Poster} />
@@ -576,9 +679,6 @@ function Error_component({error_msg}) {
   )
 
 }
-
-
-
 //////////////////////////////////////////////////////////////
 
 

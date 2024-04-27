@@ -203,6 +203,7 @@
 .div_inner_inner_rating_stars_btn{
     margin-top: 4px;
 }
+
 .btn_add_to_list{
 
     
@@ -220,9 +221,15 @@
 
     margin-top: 20px;   
 
+    cursor: pointer;
     
 }
-
+.btn_add_to_list:hover{
+    background-color: rgb(115, 73, 240);
+}
+.btn_add_to_list:active{
+    background-color: rgb(103, 65, 217);
+}
 
 
 

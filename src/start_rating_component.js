@@ -38,10 +38,10 @@ total_stars=5 ,
 
 color = "#fcc419" ,
 
-text_size = 38 ,
+text_size = 24 ,
 font_family ="gilroy" ,
 
-star_size=48 ,
+star_size=28 ,
 
 messages_arr=[],
 
@@ -59,7 +59,8 @@ recieved_key ,
                             lineHeight:"1" ,
                             color:color,
                             fontSize:`${text_size}px` , 
-                            fontFamily : font_family ,     
+                            fontFamily : font_family ,
+                            marginTop:"3px" ,     
                         }
 
 
@@ -166,6 +167,7 @@ star_size,
         onClick={(e) => handle_stars_click_function(e , rating_value)}
         onMouseEnter={(e) => on_mouse_enter_function(e , rating_value)} 
         onMouseLeave={(e) => on_mouse_out_function(e)}
+        
         >
 
                 { full ? 
