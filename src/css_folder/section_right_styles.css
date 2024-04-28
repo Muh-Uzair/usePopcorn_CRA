@@ -109,9 +109,9 @@
 
     display: grid;
 
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 100px 1fr 60px;
 
-    cursor: pointer;
+    
 }
 .ul_movies_list li:hover {
     background-color: #363d43;
@@ -161,9 +161,41 @@
     margin-top: 10px;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
+
+    text-wrap: nowrap;
 }
 .start_imdb_rating, .text_user_rating, .text_movie_duration{
     margin-right: 5px;
 }
 
 
+.div_cross_btn{
+
+    display: flex;
+    align-items: center;
+    
+}
+.right_cross_button{
+
+    
+
+    cursor: pointer;
+
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-bottom: 4px;
+
+    border: none;
+    background-color: red;
+    color: white;
+    
+    border-radius: 30px;
+    font-size: 20px;
+
+}
+.right_cross_button:hover{
+    background-color: rgb(158, 0, 0);
+}
+.right_cross_button:active{
+    background-color: rgb(255, 0, 0);
+}

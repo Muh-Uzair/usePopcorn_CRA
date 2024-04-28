@@ -260,3 +260,14 @@
     font-family: Arial, Helvetica, sans-serif;
     color: rgb(242, 242, 242);
 }
+
+
+
+
+.text_you_rated_movie{
+    font-family: gilroy;
+    font-size: 22px;
+    font-weight: 500;
+
+    color: white;
+}

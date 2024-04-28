@@ -47,7 +47,6 @@ set_temp_movie_data ,
     // console.log(movie_name_dummy.trim().length ) ;
 
     if(movie_name_dummy.trim().length === 0 ) {
-      console.log(`yes`) ;
       set_error_msg("❌ Input field empty!") ;
       set_temp_movie_data([]) ;
       set_inputed_movie_name("") ;

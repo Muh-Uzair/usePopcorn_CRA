@@ -74,6 +74,7 @@ export default function App() {
   const [is_loading , set_is_loading] = useState(false) ;
   const [error_msg , set_error_msg] = useState("") ;
   const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
+  
   const [movie_clicked , set_movie_clicked] = useState(false) ;
   const [movie_details_obj , set_movie_details_obj] = useState("") ; 
   const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
@@ -109,6 +110,7 @@ export default function App() {
 
         set_temp_movie_data(data.Search)
         
+        
 
 
       }
@@ -118,7 +120,7 @@ export default function App() {
         
       }
       finally{
-        set_is_loading(false)
+        set_is_loading(false) ;
       }
 
 
@@ -126,9 +128,35 @@ export default function App() {
     //------------
 
     if(inputed_movie_name.length === 0)  return ;
+    if(movie_clicked === true ) {set_movie_clicked(false)}
     fetch_movies_data() ;
 
   } , [inputed_movie_name] )
+
+
+  useEffect( function() {
+
+    function callback(event_info_object) {
+
+      if(event_info_object.code === "Escape" && movie_clicked === true) {
+        set_movie_clicked(false) ;
+        return ;
+
+      }
+      return ;
+
+    }
+
+    document.addEventListener("keydown" , callback )
+
+    return function () {
+      document.removeEventListener("keydown" , callback ) ;
+    }
+
+
+  })
+
+
 
   
   
@@ -193,37 +221,24 @@ export default function App() {
 
               <Section_component            
               >
-                {/* {!movie_clicked && 
-                <>
-                      <Div_section_right_summary_component temp_watch_data={temp_watch_data}/>
-                      <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
-                </>
-                } */}
 
-                {/* {movie_clicked && 
-                <>
-                      {is_loading_details ? <Loader_component msg={"LOADING..."}/> : 
-                      <Movie_details_component 
-                      movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
-                      movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
-                      big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
-                      />
-                    }
-                </>} */}
 
-                {movie_clicked ? is_loading_details ? <Loader_component msg={"LOADING..."}/> : 
-                <Movie_details_component 
-                      movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
-                      movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
-                      big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
-                      temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
-                      /> 
+                {movie_clicked ?
+                 is_loading_details ? <Loader_component msg={"LOADING..."}/>
                       : 
-                      <>
-                      <Div_section_right_summary_component 
-                      temp_watch_data={temp_watch_data} />
-                      <Div_section_right_movies_list_component temp_watch_data={temp_watch_data}/>
-                      </>
+                <Movie_details_component 
+                movie_details_obj={movie_details_obj} set_movie_details_obj={set_movie_details_obj}
+                movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked}
+                big_movie_details_obj={big_movie_details_obj} set_big_movie_details_obj={set_big_movie_details_obj}
+                temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}
+                /> 
+                      : 
+                <>
+                    <Div_section_right_summary_component 
+                    temp_watch_data={temp_watch_data} />
+                    <Div_section_right_movies_list_component 
+                    temp_watch_data={temp_watch_data} set_temp_watch_data={set_temp_watch_data}/>
+                </>
 
                 }
 
@@ -314,9 +329,9 @@ function Div_section_right_summary_component({
         <div className="div_summary_detials">
 
           <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{temp_watch_data.length} movies</p>
-          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>{average_imdb_rating}</p>
-          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>{average_user_rating}</p>
-          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>{average_duration} min</p>
+          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>{ temp_watch_data.length > 0 ? average_imdb_rating : 0}</p>
+          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>{temp_watch_data.length > 0 ?  average_user_rating : 0}</p>
+          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>{ temp_watch_data.length > 0 ? average_duration : 0} min</p>
 
 
         </div>
@@ -326,14 +341,22 @@ function Div_section_right_summary_component({
 
   )
 } 
-function Div_section_right_movies_list_component({temp_watch_data}) {
+function Div_section_right_movies_list_component({
+temp_watch_data , set_temp_watch_data
+}) {
+
+
+  function handle_btn_cross_click(event_info_object , cliced_cross_index) {
+    set_temp_watch_data(temp_watch_data.filter((_, index) => index !== cliced_cross_index)) ;
+  }
 
   return (
 
     <div className="div_section_right_movies_list">
 
         <ul className="ul_movies_list">
-          {temp_watch_data.map((val) => (
+          {temp_watch_data.map((val, i) => (
+
             <li key={val.Title}>
 
               <div className="div_movie_poster">
@@ -342,6 +365,7 @@ function Div_section_right_movies_list_component({temp_watch_data}) {
 
 
               <div className="div_movie_text">
+
                 <p className="movie_name">{val.Title}</p>
 
                 <div className="div_ratings_plus_details">
@@ -351,11 +375,20 @@ function Div_section_right_movies_list_component({temp_watch_data}) {
                   <p className="text_movie_duration"><span className="icon_moview_duration">⏳</span>{val.runtime}</p>
                   
                 </div>
+
+
                 
 
               </div>
 
+              <div className="div_cross_btn">
+                 <button data-index_number={i}  className="right_cross_button" 
+                 onClick={(e) => handle_btn_cross_click(e , i) }>x</button>
+              </div>
+              
+
             </li>
+
           ))}
         </ul>
 
@@ -376,6 +409,8 @@ temp_watch_data, set_temp_watch_data ,
 
   const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
 
+  let after_user_rated_rating  = 0 ;
+
 
   function check_duplication_in_temp_movie_data_function(){
 
@@ -385,6 +420,7 @@ temp_watch_data, set_temp_watch_data ,
 
       if(val.imdbID === big_movie_details_obj.imdbID ) {
         flag = false ;
+        after_user_rated_rating = val.userRating ;
       }
 
     } )
@@ -426,6 +462,21 @@ temp_watch_data, set_temp_watch_data ,
     
   }
 
+  function handle_btn_back_right_click(event_info_object) {
+
+    
+
+    set_movie_clicked(false) ;
+    document.title = `usePopcorn-CRA-uzair` ;
+
+
+  }
+
+  useEffect(function() {
+    document.title = movie_details_obj.Title ;
+  },[movie_details_obj])
+
+  
   
 
   
@@ -468,11 +519,20 @@ temp_watch_data, set_temp_watch_data ,
         <div className={ movie_rating_by_user > 0 ? "div_inner_rating_stars_btn" : "div_inner_rating_stars"}>
           
           <div className={movie_rating_by_user > 0 ? "div_inner_inner_rating_stars_btn" : ""}>
+
+              {check_duplication_in_temp_movie_data_function() ?
               <Start_rating_component 
               total_stars={10} text_size={24} star_size={28}  
               key={big_movie_details_obj.imdbID}
               set_movie_rating_outside={set_movie_rating_by_user}
-              />
+              />   
+
+              :  
+
+              <p className="text_you_rated_movie">You have rated this movie {after_user_rated_rating} 🌟</p>
+              }
+
+
           </div>
 
           {movie_rating_by_user > 0 && 
@@ -500,7 +560,7 @@ temp_watch_data, set_temp_watch_data ,
 
 
       <div className="div_btn_back_right">
-          <button className="btn_back_right" onClick={(e) => set_movie_clicked(false)}>&larr;</button>
+          <button className="btn_back_right" onClick={(e) => handle_btn_back_right_click(e) }>&larr;</button>
       </div>
 
     </div>
@@ -557,7 +617,7 @@ function Movie_list_component({
 
 }) {
 
-
+  
   
 
 
@@ -565,35 +625,32 @@ function Movie_list_component({
   
   function handle_movie_click(e , recieved_movie_details_obj) {
 
-    
+  
     if(movie_details_obj === recieved_movie_details_obj ) {
       set_movie_clicked(!movie_clicked) ;
       return ;
     }
+
+    
     
     set_movie_clicked(true) ;
     set_movie_details_obj(recieved_movie_details_obj) ;  
-    
+     
   }
 
-
-
-
-  
-  
-  
-
-  
 
 
   useEffect(function() {
 
     async function get_movie_details(){
 
+      
+
       try{
 
         
-        set_is_loading_details(true)
+        set_is_loading_details(true) 
+
         const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
 
         const data = await res.json() ;
@@ -613,12 +670,21 @@ function Movie_list_component({
 
     }
 
+    if(!movie_details_obj) return ;
     get_movie_details() ;
+
+    return function() {
+      
+    }
 
   }, [movie_details_obj.imdbID])
 
 
+
+
+
   
+
 
 
 
@@ -629,7 +695,7 @@ function Movie_list_component({
     <ul className="ul_movies_list">
       {temp_movie_data.map((val) => (
         <li key={val.imdbID} onClick={(e) => handle_movie_click(e , val)}
-        style={movie_details_obj.imdbID === val.imdbID ? {backgroundColor:"#393f46"} : {} }
+        
         >
 
           <div className="div_movie_poster">
@@ -668,17 +734,7 @@ inputed_movie_name, set_inputed_movie_name ,
     </div>
   )
 }
-function Error_component({error_msg}) {
 
-  console.log(error_msg)
-  
-  return(
-    <div className="div_loader_component">
-      {error_msg}
-    </div>
-  )
-
-}
 //////////////////////////////////////////////////////////////
 
 
