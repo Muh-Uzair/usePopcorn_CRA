@@ -20,11 +20,15 @@ handle_form_submit ,
 }
 
 
-export function Btn_plus_minus_comoonent({btn_plus_minus , set_btn_plus_minus}) {
+export function Btn_plus_minus_comoonent({
+btn_plus_minus , set_btn_plus_minus ,
+handle_movie_click_turn_off
+}) {
 
     
     function handle_btn_plus_minus_click(event_info_object) {
       set_btn_plus_minus((btn_plus_minus) => !btn_plus_minus);
+      handle_movie_click_turn_off()
     }
 
     return(

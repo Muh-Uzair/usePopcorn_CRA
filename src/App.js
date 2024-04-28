@@ -190,7 +190,9 @@ export default function App() {
       >
 
 
-              <Section_component >
+              <Section_component 
+              movie_clicked={movie_clicked} set_movie_clicked={set_movie_clicked} 
+              >
 
 
                 {is_loading ?<Loader_component msg={"LOADING..."} set_error_msg={set_error_msg} 
@@ -219,7 +221,8 @@ export default function App() {
 
 
 
-              <Section_component            
+              <Section_component  
+                       
               >
 
 
@@ -583,11 +586,18 @@ temp_watch_data, set_temp_watch_data ,
 function Section_component({
 
   children, 
+  movie_clicked , set_movie_clicked ,
   
 
 }) {
 
   const [btn_plus_minus, set_btn_plus_minus] = useState(true);
+
+  function handle_movie_click_turn_off() {
+    if(movie_clicked){
+      set_movie_clicked(false)
+    }
+  }
 
 
   return (
@@ -595,7 +605,8 @@ function Section_component({
     <section className="section_left">
 
       <Btn_plus_minus_comoonent
-        btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus} />
+        btn_plus_minus={btn_plus_minus} set_btn_plus_minus={set_btn_plus_minus}
+        handle_movie_click_turn_off={handle_movie_click_turn_off} />
 
       {btn_plus_minus && 
       children
