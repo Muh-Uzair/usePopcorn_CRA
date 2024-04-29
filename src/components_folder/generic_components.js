@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function Form_plus_input_component({
 form_class_name , input_class_name , input_place_holder ,
@@ -6,7 +6,18 @@ movie_name_dummy , set_inputed_movie_name ,
 handle_input_change ,
 handle_form_submit ,
 
+            
+
 }) {
+
+
+
+
+                    const input_searc_bar = useRef(null) ;
+
+                    useEffect(function() {
+                        input_searc_bar.current.focus() ;
+                    })
 
     return(
     <form className={form_class_name} onSubmit={(e) => handle_form_submit(e)}>
@@ -14,6 +25,7 @@ handle_form_submit ,
         type="text" className={input_class_name} placeholder={input_place_holder} 
         value={movie_name_dummy} 
         onChange={(e) => handle_input_change(e)}
+        ref = {input_searc_bar}
         />
      </form>
     )
