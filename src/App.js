@@ -69,92 +69,98 @@ const movie_name = 'Matrix' ;
 
 export default function App() {
 
-  const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
-  const [temp_watch_data , set_temp_watch_data] = useState(tempWatchedDataDummy) ;
-  const [is_loading , set_is_loading] = useState(false) ;
-  const [error_msg , set_error_msg] = useState("") ;
-  const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
+                const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
+                // const [temp_watch_data , set_temp_watch_data] = useState([]) ;
+                const [temp_watch_data , set_temp_watch_data] = useState(function() {
+                  const val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
+                  return val_from_local_storage
+                }) ;
+                const [is_loading , set_is_loading] = useState(false) ;
+                const [error_msg , set_error_msg] = useState("") ;
+                const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
+                
+                const [movie_clicked , set_movie_clicked] = useState(false) ;
+                const [movie_details_obj , set_movie_details_obj] = useState("") ; 
+                const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
+                const [is_loading_details , set_is_loading_details] = useState(false) ;
   
-  const [movie_clicked , set_movie_clicked] = useState(false) ;
-  const [movie_details_obj , set_movie_details_obj] = useState("") ; 
-  const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
-  const [is_loading_details , set_is_loading_details] = useState(false) ;
-  
 
 
 
-  useEffect( function() {
+                useEffect( function() {
 
 
-    //----------
-    async function fetch_movies_data() {
+                  //----------
+                  async function fetch_movies_data() {
 
-      try{
-        
-        set_is_loading(true) ;
-        set_error_msg("") ; 
-        const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${inputed_movie_name}`) ;
-        if(res.ok === false) {
-          throw new Error("Error_occured") ; 
-        }
+                    try{
+                      
+                      set_is_loading(true) ;
+                      set_error_msg("") ; 
+                      const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${inputed_movie_name}`) ;
+                      if(res.ok === false) {
+                        throw new Error("Error_occured") ; 
+                      }
 
-        const data = await res.json() ;
-        if(data.Response === "False"){
-          set_temp_movie_data([])
-          throw new Error("❌ Movie not found") ;
-          
-        }
-
-
-        // console.log(data.Search) ;
-
-        set_temp_movie_data(data.Search)
-        
-        
+                      const data = await res.json() ;
+                      if(data.Response === "False"){
+                        set_temp_movie_data([])
+                        throw new Error("❌ Movie not found") ;
+                        
+                      }
 
 
-      }
-      catch(err_obj){
-   
-        set_error_msg(err_obj.message)      
-        
-      }
-      finally{
-        set_is_loading(false) ;
-      }
+                      // console.log(data.Search) ;
+
+                      set_temp_movie_data(data.Search)
+                      
+                      
 
 
-    }
-    //------------
-
-    if(inputed_movie_name.length === 0)  return ;
-    if(movie_clicked === true ) {set_movie_clicked(false)}
-    fetch_movies_data() ;
-
-  } , [inputed_movie_name] )
-
-
-  useEffect( function() {
-
-    function callback(event_info_object) {
-
-      if(event_info_object.code === "Escape" && movie_clicked === true) {
-        set_movie_clicked(false) ;
-        return ;
-
-      }
-      return ;
-
-    }
-
-    document.addEventListener("keydown" , callback )
-
-    return function () {
-      document.removeEventListener("keydown" , callback ) ;
-    }
+                    }
+                    catch(err_obj){
+                
+                      set_error_msg(err_obj.message)      
+                      
+                    }
+                    finally{
+                      set_is_loading(false) ;
+                    }
 
 
-  })
+                  }
+                  //------------
+
+                  if(inputed_movie_name.length === 0)  return ;
+                  if(movie_clicked === true ) {set_movie_clicked(false)}
+                  fetch_movies_data() ;
+
+                } , [inputed_movie_name] )
+
+
+                useEffect( function() {
+
+                  function callback(event_info_object) {
+
+                    if(event_info_object.code === "Escape" && movie_clicked === true) {
+                      set_movie_clicked(false) ;
+                      return ;
+
+                    }
+                    return ;
+
+                  }
+
+                  document.addEventListener("keydown" , callback )
+
+                  return function () {
+                    document.removeEventListener("keydown" , callback ) ;
+                  }
+
+
+                })
+
+
 
 
 
@@ -408,78 +414,89 @@ temp_watch_data, set_temp_watch_data ,
 
 }) {
 
-  // console.log(movie_details_obj) ;
+            // console.log(movie_details_obj) ;
 
-  const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
+            const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
 
-  let after_user_rated_rating  = 0 ;
-
-
-  function check_duplication_in_temp_movie_data_function(){
-
-    let flag = true ;
-
-    temp_watch_data.map( (val) => {
-
-      if(val.imdbID === big_movie_details_obj.imdbID ) {
-        flag = false ;
-        after_user_rated_rating = val.userRating ;
-      }
-
-    } )
-
-    return flag ;
-
-  }
+            let after_user_rated_rating  = 0 ;
 
 
-  function handle_add_to_list_btn_click_function(event_info_object) {
-    
-    
+            function check_duplication_in_temp_movie_data_function(){
 
-    const movie_details_for_pushing = {
+              let flag = true ;
 
-      imdbID: big_movie_details_obj.imdbID,
-      Title: big_movie_details_obj.Title,
-      Year: big_movie_details_obj.Year,
-      Poster:big_movie_details_obj.Poster,
-      runtime: big_movie_details_obj.Runtime,
-      imdbRating: big_movie_details_obj.imdbRating,
-      userRating: movie_rating_by_user ,
-      
-    }
+              temp_watch_data.map( (val) => {
+
+                if(val.imdbID === big_movie_details_obj.imdbID ) {
+                  flag = false ;
+                  after_user_rated_rating = val.userRating ;
+                }
+
+              } )
+
+              return flag ;
+
+            }
 
 
-    if(check_duplication_in_temp_movie_data_function()){
-
-      set_temp_watch_data([...temp_watch_data , movie_details_for_pushing]) ;
-      set_movie_clicked(false)
-      
-    }
-    else if(!check_duplication_in_temp_movie_data_function()){
-      set_movie_clicked(false)
-      return
-    }
+            function handle_add_to_list_btn_click_function(event_info_object) {
     
 
-    
-  }
+              const movie_details_for_pushing = {
 
-  function handle_btn_back_right_click(event_info_object) {
+                imdbID: big_movie_details_obj.imdbID,
+                Title: big_movie_details_obj.Title,
+                Year: big_movie_details_obj.Year,
+                Poster:big_movie_details_obj.Poster,
+                runtime: big_movie_details_obj.Runtime,
+                imdbRating: big_movie_details_obj.imdbRating,
+                userRating: movie_rating_by_user ,
+                
+              }
 
-    
 
-    set_movie_clicked(false) ;
-    document.title = `usePopcorn-CRA-uzair` ;
+              if(check_duplication_in_temp_movie_data_function()){
+
+                set_temp_watch_data( (temp_watch_data) => [...temp_watch_data , movie_details_for_pushing]) ;
+                set_movie_clicked(false)
+
+                
+                
+              }
+              else if(!check_duplication_in_temp_movie_data_function()){
+                set_movie_clicked(false)
+                return
+              }
+              
+
+              
+            }
+
+            function handle_btn_back_right_click(event_info_object) {
+
+              
+
+              set_movie_clicked(false) ;
+              document.title = `usePopcorn-CRA-uzair` ;
 
 
-  }
+            }
 
-  useEffect(function() {
-    document.title = movie_details_obj.Title ;
-  },[movie_details_obj])
+            useEffect(function() {
+              document.title = movie_details_obj.Title ;
+            },[movie_details_obj])
 
-  
+            useEffect(function() {
+            })
+
+            useEffect(function() {
+
+              console.log("pushed to local storage")
+              localStorage.setItem("all_watched_movies" , JSON.stringify(temp_watch_data)) ;
+
+            } , [temp_watch_data])
+
+
   
 
   
@@ -642,8 +659,6 @@ function Movie_list_component({
       return ;
     }
 
-    
-    
     set_movie_clicked(true) ;
     set_movie_details_obj(recieved_movie_details_obj) ;  
      
