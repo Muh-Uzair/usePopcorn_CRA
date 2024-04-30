@@ -2,10 +2,11 @@
 
 
 // import { Section_left_component } from "./components_folder/Section_left_component";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component, Founded_results_component } from "./components_folder/Nav_bar_component";
 import { Btn_plus_minus_comoonent } from "./components_folder/generic_components";
 import Start_rating_component from "./start_rating_component"
+import {useFetchMoviesDataAccordingToSearchFunction} from "./custom_hooks_folder/useFetchMoviesDataAccordingToSearchFunction"
 
 
 // This movies data will be shown when we first load the app
@@ -61,104 +62,80 @@ const tempWatchedDataDummy = [
 
 
 const API_KEY = "d8e2a0b7" ;
-const movie_name = 'Matrix' ;
 
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export default function App() {
 
-                const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
-                // const [temp_watch_data , set_temp_watch_data] = useState([]) ;
-                const [temp_watch_data , set_temp_watch_data] = useState(function() {
-                  const val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
-                  return val_from_local_storage
-                }) ;
-                const [is_loading , set_is_loading] = useState(false) ;
-                const [error_msg , set_error_msg] = useState("") ;
-                const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
-                
-                const [movie_clicked , set_movie_clicked] = useState(false) ;
-                const [movie_details_obj , set_movie_details_obj] = useState("") ; 
-                const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
-                const [is_loading_details , set_is_loading_details] = useState(false) ;
-  
 
 
 
-                useEffect( function() {
+
+            const [temp_watch_data , set_temp_watch_data] = useState(function() {
+              const val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
+              return val_from_local_storage
+            }) ;
 
 
-                  //----------
-                  async function fetch_movies_data() {
+            const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
+            
+            const [movie_clicked , set_movie_clicked] = useState(false) ;
+            const [movie_details_obj , set_movie_details_obj] = useState("") ; 
+            const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
+            const [is_loading_details , set_is_loading_details] = useState(false) ;
 
-                    try{
-                      
-                      set_is_loading(true) ;
-                      set_error_msg("") ; 
-                      const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${inputed_movie_name}`) ;
-                      if(res.ok === false) {
-                        throw new Error("Error_occured") ; 
+
+            const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
+
+            
+            const {is_loading , set_is_loading , error_msg , set_error_msg} = 
+            useFetchMoviesDataAccordingToSearchFunction( temp_movie_data  , set_temp_movie_data , 
+              inputed_movie_name , movie_clicked , set_movie_clicked  )
+
+         
+            //_______________________________________________________________________________
+                  useEffect( function() {
+
+                    function callback(event_info_object) {
+
+                      if(event_info_object.code === "Escape" && movie_clicked === true) {
+                        set_movie_clicked(false) ;
+                        return ;
+
                       }
-
-                      const data = await res.json() ;
-                      if(data.Response === "False"){
-                        set_temp_movie_data([])
-                        throw new Error("❌ Movie not found") ;
-                        
-                      }
-
-
-                      // console.log(data.Search) ;
-
-                      set_temp_movie_data(data.Search)
-                      
-                      
-
-
-                    }
-                    catch(err_obj){
-                
-                      set_error_msg(err_obj.message)      
-                      
-                    }
-                    finally{
-                      set_is_loading(false) ;
-                    }
-
-
-                  }
-                  //------------
-
-                  if(inputed_movie_name.length === 0)  return ;
-                  if(movie_clicked === true ) {set_movie_clicked(false)}
-                  fetch_movies_data() ;
-
-                } , [inputed_movie_name] )
-
-
-                useEffect( function() {
-
-                  function callback(event_info_object) {
-
-                    if(event_info_object.code === "Escape" && movie_clicked === true) {
-                      set_movie_clicked(false) ;
                       return ;
 
                     }
-                    return ;
 
-                  }
+                    document.addEventListener("keydown" , callback )
 
-                  document.addEventListener("keydown" , callback )
-
-                  return function () {
-                    document.removeEventListener("keydown" , callback ) ;
-                  }
+                    return function () {
+                      document.removeEventListener("keydown" , callback ) ;
+                    }
 
 
-                })
+                  })
+            //_______________________________________________________________________________            
+                  const input_search_bar = useRef(null) ;
+                  useEffect(function(){
+
+                    document.addEventListener("keydown" , function(event_info_object) {
+
+                      
+
+                      if(event_info_object.key === "Enter") {
+                        input_search_bar.current.focus() ;
+                      }
+
+                    })
+
+
+                  })
+
+               
 
 
 
@@ -169,9 +146,10 @@ export default function App() {
 
 
 
-
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
   return (
-    <div className="div_everything_containing">
+    <div className="div_everything_containing" >
 
       
       <Nav_bar_component>
@@ -181,6 +159,7 @@ export default function App() {
         inputed_movie_name={inputed_movie_name} set_inputed_movie_name={set_inputed_movie_name} 
         set_error_msg={set_error_msg}
         set_temp_movie_data={set_temp_movie_data}
+        input_search_bar={input_search_bar}
 
         />
         <Founded_results_component temp_movie_data={temp_movie_data} />
@@ -267,6 +246,9 @@ export default function App() {
 
     </div>
   )
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
 }
 
 
@@ -281,53 +263,93 @@ export default function App() {
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+function Main_component({
+  children
+  
+  }) {
+  
+    //----------------------------------------------------------------------------------------
+    return( 
+      
+      <main className="main_lower_box">
+  
+        {children}
+  
+  
+      </main>
+    )
+    //-----------------------------------------------------------------------------------------------
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Div_section_right_summary_component({
   temp_watch_data ,
 
 }) {
 
-  // console.log(temp_watch_data) ;
 
-  const [average_user_rating , set_average_user_rating] = useState(0) ;
-  let avg_usr_rat = 0 ;
 
-  const [average_imdb_rating , set_average_imdb_rating] = useState(0) ;
-  let avg_imdb_rat = 0 ;
 
-  const [average_duration , set_average_duration] = useState(0) ;
-  let avg_dur = 0 ;
+            // console.log(temp_watch_data) ;
 
+            const [average_user_rating , set_average_user_rating] = useState(0) ;
+            let avg_usr_rat = 0 ;
+
+            const [average_imdb_rating , set_average_imdb_rating] = useState(0) ;
+            let avg_imdb_rat = 0 ;
+
+            const [average_duration , set_average_duration] = useState(0) ;
+            let avg_dur = 0 ;
+
+            
+            //_________________________________________________________________________________
+                    useEffect(function() {
+
+                      temp_watch_data.map( (val) => {
+
+                        avg_usr_rat = avg_usr_rat + val.userRating ;   
+                        avg_imdb_rat = avg_imdb_rat + parseFloat(val.imdbRating) ;
+
+                        let index_of_space = val.runtime.indexOf(" ") ;
+
+                        // console.log(val.runtime , index_of_space) ;
+                        // console.log(parseInt( val.runtime.slice(0 , index_of_space)))
+                        // console.log(" ")
+
+                        avg_dur = avg_dur + parseInt( val.runtime.slice(0 , index_of_space) )
+                    
+                      })
+
+                      set_average_user_rating( ((avg_usr_rat/temp_watch_data.length)).toFixed(1) ) ;
+                      set_average_imdb_rating( ((avg_imdb_rat/temp_watch_data.length)).toFixed(1) ) ;
+                      set_average_duration(  Math.trunc((avg_dur/temp_watch_data.length))  ) ;
+
+
+                      
+                    })
   
-  
-  useEffect(function() {
-
-    temp_watch_data.map( (val) => {
-
-      avg_usr_rat = avg_usr_rat + val.userRating ;   
-      avg_imdb_rat = avg_imdb_rat + parseFloat(val.imdbRating) ;
-
-      let index_of_space = val.runtime.indexOf(" ") ;
-
-      // console.log(val.runtime , index_of_space) ;
-      // console.log(parseInt( val.runtime.slice(0 , index_of_space)))
-      // console.log(" ")
-
-      avg_dur = avg_dur + parseInt( val.runtime.slice(0 , index_of_space) )
-  
-    })
-
-    set_average_user_rating( ((avg_usr_rat/temp_watch_data.length)).toFixed(1) ) ;
-    set_average_imdb_rating( ((avg_imdb_rat/temp_watch_data.length)).toFixed(1) ) ;
-    set_average_duration(  Math.trunc((avg_dur/temp_watch_data.length))  ) ;
 
 
-    
-  })
-  
-
-
-
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
   return(
 
   <div className="div_setion_right_summary">
@@ -349,15 +371,33 @@ function Div_section_right_summary_component({
   </div>
 
   )
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
+
+
+
+
 } 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Div_section_right_movies_list_component({
 temp_watch_data , set_temp_watch_data
 }) {
 
 
-  function handle_btn_cross_click(event_info_object , cliced_cross_index) {
-    set_temp_watch_data(temp_watch_data.filter((_, index) => index !== cliced_cross_index)) ;
-  }
+
+
+
+
+            //__________________________________________________________________________________
+            function handle_btn_cross_click(event_info_object , cliced_cross_index) {
+              set_temp_watch_data(temp_watch_data.filter((_, index) => index !== cliced_cross_index)) ;
+            }
+
+
+
+//--------------------------------------------------------------------------------------------
 
   return (
 
@@ -405,7 +445,14 @@ temp_watch_data , set_temp_watch_data
     </div>
   )
 
+//--------------------------------------------------------------------------------------------
+
+
+
+
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Movie_details_component({
 movie_details_obj , set_movie_details_obj ,
 movie_clicked , set_movie_clicked ,
@@ -417,84 +464,90 @@ temp_watch_data, set_temp_watch_data ,
             // console.log(movie_details_obj) ;
 
             const [movie_rating_by_user , set_movie_rating_by_user] = useState(0) ;
+            const clicks_on_stars_ref  = useRef(0) ;
 
             let after_user_rated_rating  = 0 ;
 
+            //_____________________________________________________________________________________________
+                    function check_duplication_in_temp_movie_data_function(){
 
-            function check_duplication_in_temp_movie_data_function(){
+                      let flag = true ;
 
-              let flag = true ;
+                      temp_watch_data.map( (val) => {
 
-              temp_watch_data.map( (val) => {
+                        if(val.imdbID === big_movie_details_obj.imdbID ) {
+                          flag = false ;
+                          after_user_rated_rating = val.userRating ;
+                        }
 
-                if(val.imdbID === big_movie_details_obj.imdbID ) {
-                  flag = false ;
-                  after_user_rated_rating = val.userRating ;
-                }
+                      } )
 
-              } )
+                      return flag ;
 
-              return flag ;
+                    }
+            //_____________________________________________________________________________________________
+                    function handle_add_to_list_btn_click_function(event_info_object) {
+            
 
-            }
+                      const movie_details_for_pushing = {
 
-
-            function handle_add_to_list_btn_click_function(event_info_object) {
-    
-
-              const movie_details_for_pushing = {
-
-                imdbID: big_movie_details_obj.imdbID,
-                Title: big_movie_details_obj.Title,
-                Year: big_movie_details_obj.Year,
-                Poster:big_movie_details_obj.Poster,
-                runtime: big_movie_details_obj.Runtime,
-                imdbRating: big_movie_details_obj.imdbRating,
-                userRating: movie_rating_by_user ,
-                
-              }
-
-
-              if(check_duplication_in_temp_movie_data_function()){
-
-                set_temp_watch_data( (temp_watch_data) => [...temp_watch_data , movie_details_for_pushing]) ;
-                set_movie_clicked(false)
-
-                
-                
-              }
-              else if(!check_duplication_in_temp_movie_data_function()){
-                set_movie_clicked(false)
-                return
-              }
-              
-
-              
-            }
-
-            function handle_btn_back_right_click(event_info_object) {
-
-              
-
-              set_movie_clicked(false) ;
-              document.title = `usePopcorn-CRA-uzair` ;
+                        imdbID: big_movie_details_obj.imdbID,
+                        Title: big_movie_details_obj.Title,
+                        Year: big_movie_details_obj.Year,
+                        Poster:big_movie_details_obj.Poster,
+                        runtime: big_movie_details_obj.Runtime,
+                        imdbRating: big_movie_details_obj.imdbRating,
+                        userRating: movie_rating_by_user ,
+                        starts_clicks : clicks_on_stars_ref.current ,
+                        
+                      }
 
 
-            }
+                      if(check_duplication_in_temp_movie_data_function()){
 
-            useEffect(function() {
-              document.title = movie_details_obj.Title ;
-            },[movie_details_obj])
+                        set_temp_watch_data( (temp_watch_data) => [...temp_watch_data , movie_details_for_pushing]) ;
+                        set_movie_clicked(false)
 
-            useEffect(function() {
-            })
+                        
+                        
+                      }
+                      else if(!check_duplication_in_temp_movie_data_function()){
+                        set_movie_clicked(false)
+                        return
+                      }
+                      
 
-            useEffect(function() {
+                      
+                    }
+            //_____________________________________________________________________________________________
+                    function handle_btn_back_right_click(event_info_object) {
 
-              console.log("pushed to local storage")
-              localStorage.setItem("all_watched_movies" , JSON.stringify(temp_watch_data)) ;
+                      
 
-            } , [temp_watch_data])
+                      set_movie_clicked(false) ;
+                      document.title = `usePopcorn-CRA-uzair` ;
+
+
+                    }
+            //_____________________________________________________________________________________________
+                    useEffect(function() {
+                      document.title = movie_details_obj.Title ;
+                    },[movie_details_obj])
+            //_____________________________________________________________________________________________
+                    useEffect(function() {
+
+                      // console.log("pushed to local storage")
+                      localStorage.setItem("all_watched_movies" , JSON.stringify(temp_watch_data)) ;
+
+                    } , [temp_watch_data])
+            //_____________________________________________________________________________________________
+                    useEffect(function() {
+                      if(!movie_rating_by_user) return
+                      
+                                    clicks_on_stars_ref.current++ ;
+
+
+                    },[movie_rating_by_user])
 
 
   
@@ -503,6 +556,7 @@ temp_watch_data, set_temp_watch_data ,
 
 
 
+//--------------------------------------------------------------------------------------------
   return(
     <div className="div_movie_details">
 
@@ -585,6 +639,12 @@ temp_watch_data, set_temp_watch_data ,
 
     </div>
   )
+
+//--------------------------------------------------------------------------------------------
+
+
+
+
 }
 //////////////////////////////////////////////////////////////
 
@@ -600,6 +660,8 @@ temp_watch_data, set_temp_watch_data ,
 
 
 //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Section_component({
 
   children, 
@@ -608,15 +670,16 @@ function Section_component({
 
 }) {
 
-  const [btn_plus_minus, set_btn_plus_minus] = useState(true);
+          const [btn_plus_minus, set_btn_plus_minus] = useState(true);
 
-  function handle_movie_click_turn_off() {
-    if(movie_clicked){
-      set_movie_clicked(false)
-    }
-  }
+          //_______________________________________________________________________
+          function handle_movie_click_turn_off() {
+            if(movie_clicked){
+              set_movie_clicked(false)
+            }
+          }
 
-
+//---------------------------------------------------------------------------------------
   return (
 
     <section className="section_left">
@@ -633,7 +696,10 @@ function Section_component({
     </section>
 
   );
+//-----------------------------------------------------------------------------------------
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Movie_list_component({
 
   temp_movie_data, set_temp_movie_data,
@@ -650,60 +716,58 @@ function Movie_list_component({
 
 
 
-  
-  function handle_movie_click(e , recieved_movie_details_obj) {
+            //___________________________________________________________________________________________  
+            function handle_movie_click(e , recieved_movie_details_obj) {
 
-  
-    if(movie_details_obj === recieved_movie_details_obj ) {
-      set_movie_clicked(!movie_clicked) ;
-      return ;
-    }
+            
+              if(movie_details_obj === recieved_movie_details_obj ) {
+                set_movie_clicked(!movie_clicked) ;
+                return ;
+              }
 
-    set_movie_clicked(true) ;
-    set_movie_details_obj(recieved_movie_details_obj) ;  
-     
-  }
+              set_movie_clicked(true) ;
+              set_movie_details_obj(recieved_movie_details_obj) ;  
+              
+            }
+            //__________________________________________________________________________________________
+            useEffect(function() {
 
+              async function get_movie_details(){
 
+                
 
-  useEffect(function() {
+                try{
 
-    async function get_movie_details(){
+                  
+                  set_is_loading_details(true) 
 
-      
+                  const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
 
-      try{
+                  const data = await res.json() ;
+                  set_big_movie_details_obj( prev=>  data) ;
+                  
 
-        
-        set_is_loading_details(true) 
+                  
 
-        const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
+                }
+                catch(err) {
 
-        const data = await res.json() ;
-        set_big_movie_details_obj( prev=>  data) ;
-        
-
-        
-
-      }
-      catch(err) {
-
-      }
-      finally{
-        set_is_loading_details(false)        
-      }
+                }
+                finally{
+                  set_is_loading_details(false)        
+                }
 
 
-    }
+              }
 
-    if(!movie_details_obj) return ;
-    get_movie_details() ;
+              if(!movie_details_obj) return ;
+              get_movie_details() ;
 
-    return function() {
-      
-    }
+              return function() {
+                
+              }
 
-  }, [movie_details_obj.imdbID])
+            }, [movie_details_obj.imdbID])
 
 
 
@@ -714,7 +778,7 @@ function Movie_list_component({
 
 
 
-
+//---------------------------------------------------------------------------------
  if(temp_movie_data) {
   return (
 
@@ -741,9 +805,12 @@ function Movie_list_component({
 
   );
  }
+//---------------------------------------------------------------------------------
 
 
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function Loader_component({
 msg , set_error_msg , 
 inputed_movie_name, set_inputed_movie_name ,
@@ -753,14 +820,14 @@ inputed_movie_name, set_inputed_movie_name ,
 
 
 
-
+//----------------------------------------------------------------------------
   return(
     <div className="div_loader_component">
       {msg}
     </div>
   )
+//-----------------------------------------------------------------------------
 }
-
 //////////////////////////////////////////////////////////////
 
 
@@ -773,22 +840,5 @@ inputed_movie_name, set_inputed_movie_name ,
 
 
 
-
-
-function Main_component({
-children
-
-}) {
-
-  return( 
-    
-    <main className="main_lower_box">
-
-      {children}
-
-
-    </main>
-  )
-}
 
 

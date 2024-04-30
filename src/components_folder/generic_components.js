@@ -1,23 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export function Form_plus_input_component({
 form_class_name , input_class_name , input_place_holder ,
 movie_name_dummy , set_inputed_movie_name ,
 handle_input_change ,
 handle_form_submit ,
+input_search_bar ,
 
             
 
 }) {
 
 
+    useEffect(function() {
+
+        input_search_bar.current.focus() ;
+    })
 
 
-                    const input_searc_bar = useRef(null) ;
 
-                    useEffect(function() {
-                        input_searc_bar.current.focus() ;
-                    })
+
+
 
     return(
     <form className={form_class_name} onSubmit={(e) => handle_form_submit(e)}>
@@ -25,13 +31,16 @@ handle_form_submit ,
         type="text" className={input_class_name} placeholder={input_place_holder} 
         value={movie_name_dummy} 
         onChange={(e) => handle_input_change(e)}
-        ref = {input_searc_bar}
+
+        ref={input_search_bar}
+        
         />
      </form>
     )
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export function Btn_plus_minus_comoonent({
 btn_plus_minus , set_btn_plus_minus ,
 handle_movie_click_turn_off
