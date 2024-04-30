@@ -7,7 +7,8 @@ import { Nav_bar_component, Logo_plus_name_component, Input_movie_name_component
 import { Btn_plus_minus_comoonent } from "./components_folder/generic_components";
 import Start_rating_component from "./start_rating_component"
 import {useFetchMoviesDataAccordingToSearchFunction} from "./custom_hooks_folder/useFetchMoviesDataAccordingToSearchFunction"
-
+import {useLocaleStorageRetrieveWatchedMoviesData} from "./custom_hooks_folder/useLocaleStorageRetrieveWatchedMoviesData"
+import {usseAddRemoveEventListener} from "./custom_hooks_folder/usseAddRemoveEventListener"
 
 // This movies data will be shown when we first load the app
 export const tempMovieDataDummy = [
@@ -71,69 +72,37 @@ const API_KEY = "d8e2a0b7" ;
 export default function App() {
 
 
+          
 
-
-
-            const [temp_watch_data , set_temp_watch_data] = useState(function() {
-              const val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
-              return val_from_local_storage
-            }) ;
 
 
             const [inputed_movie_name , set_inputed_movie_name] = useState("") ;
             
-            const [movie_clicked , set_movie_clicked] = useState(false) ;
+            const [movie_clicked , set_movie_clicked] = useState(false) ;   
             const [movie_details_obj , set_movie_details_obj] = useState("") ; 
             const [big_movie_details_obj , set_big_movie_details_obj] = useState({}) ;
             const [is_loading_details , set_is_loading_details] = useState(false) ;
 
 
+
+
             const [temp_movie_data , set_temp_movie_data] = useState(tempMovieDataDummy) ;
 
-            
-            const {is_loading , set_is_loading , error_msg , set_error_msg} = 
-            useFetchMoviesDataAccordingToSearchFunction( temp_movie_data  , set_temp_movie_data , 
-              inputed_movie_name , movie_clicked , set_movie_clicked  )
 
-         
+            const [temp_watch_data , set_temp_watch_data] = useLocaleStorageRetrieveWatchedMoviesData()
+
             //_______________________________________________________________________________
-                  useEffect( function() {
+                  const {is_loading , set_is_loading , error_msg , set_error_msg} = 
+                  useFetchMoviesDataAccordingToSearchFunction( temp_movie_data  , set_temp_movie_data , 
+                  inputed_movie_name , movie_clicked , set_movie_clicked  )
 
-                    function callback(event_info_object) {
-
-                      if(event_info_object.code === "Escape" && movie_clicked === true) {
-                        set_movie_clicked(false) ;
-                        return ;
-
-                      }
-                      return ;
-
-                    }
-
-                    document.addEventListener("keydown" , callback )
-
-                    return function () {
-                      document.removeEventListener("keydown" , callback ) ;
-                    }
-
-
-                  })
             //_______________________________________________________________________________            
                   const input_search_bar = useRef(null) ;
-                  useEffect(function(){
-
-                    document.addEventListener("keydown" , function(event_info_object) {
-
-                      
-
-                      if(event_info_object.key === "Enter") {
-                        input_search_bar.current.focus() ;
-                      }
-
-                    })
 
 
-                  })
+                  usseAddRemoveEventListener(movie_clicked , set_movie_clicked , input_search_bar) ;
+
+
 
                
 
@@ -407,6 +376,7 @@ temp_watch_data , set_temp_watch_data
           {temp_watch_data.map((val, i) => (
 
             <li key={val.Title}>
+            
 
               <div className="div_movie_poster">
                 <img className="img_movie_poster" src={val.Poster} />
@@ -534,12 +504,7 @@ temp_watch_data, set_temp_watch_data ,
                       document.title = movie_details_obj.Title ;
                     },[movie_details_obj])
             //_____________________________________________________________________________________________
-                    useEffect(function() {
-
-                      // console.log("pushed to local storage")
-                      localStorage.setItem("all_watched_movies" , JSON.stringify(temp_watch_data)) ;
-
-                    } , [temp_watch_data])
+                    
             //_____________________________________________________________________________________________
                     useEffect(function() {
                       if(!movie_rating_by_user) return

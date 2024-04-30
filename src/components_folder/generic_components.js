@@ -15,14 +15,6 @@ input_search_bar ,
 }) {
 
 
-    useEffect(function() {
-
-        input_search_bar.current.focus() ;
-    })
-
-
-
-
 
 
     return(
