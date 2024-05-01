@@ -6,4 +6,4 @@ usePopcorn
 4) Data comes from OMDB Api.
 
 
-Project Link : https://lustrous-cannoli-4ed629.netlify.app/
+Project Link : https://use-popcorn-cra-uzair.netlify.app/
