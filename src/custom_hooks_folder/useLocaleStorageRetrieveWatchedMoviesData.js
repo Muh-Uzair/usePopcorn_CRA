@@ -5,7 +5,11 @@ import { useState , useEffect } from "react"
 export function useLocaleStorageRetrieveWatchedMoviesData() {
 
     const [temp_watch_data , set_temp_watch_data] = useState(function() {
-        const val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
+        let val_from_local_storage = JSON.parse(localStorage.getItem("all_watched_movies")) ;
+        if(!val_from_local_storage) {
+          val_from_local_storage=[] ;
+        }
+
         return val_from_local_storage
       }) ;
 

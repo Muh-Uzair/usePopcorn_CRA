@@ -292,12 +292,28 @@ function Div_section_right_summary_component({
             //_________________________________________________________________________________
                     useEffect(function() {
 
+                      if(temp_watch_data) {
+
                       temp_watch_data.map( (val) => {
 
                         avg_usr_rat = avg_usr_rat + val.userRating ;   
                         avg_imdb_rat = avg_imdb_rat + parseFloat(val.imdbRating) ;
 
-                        let index_of_space = val.runtime.indexOf(" ") ;
+                        let index_of_space ; // val.runtime?.indexOf(" ") ;
+
+                        if(val.runtime) {
+                           
+                          if(val.runtime.length === 6 || val.runtime.length === "6") {
+                            index_of_space = 2
+                          }
+                          if(val.runtime.length === 7 || val.runtime.length === "7") {
+                            index_of_space = 3
+                          }
+                          if(val.runtime.length === 8 || val.runtime.length === "8") {
+                            index_of_space = 4
+                          }
+                          
+                        }
 
                         // console.log(val.runtime , index_of_space) ;
                         // console.log(parseInt( val.runtime.slice(0 , index_of_space)))
@@ -310,6 +326,8 @@ function Div_section_right_summary_component({
                       set_average_user_rating( ((avg_usr_rat/temp_watch_data.length)).toFixed(1) ) ;
                       set_average_imdb_rating( ((avg_imdb_rat/temp_watch_data.length)).toFixed(1) ) ;
                       set_average_duration(  Math.trunc((avg_dur/temp_watch_data.length))  ) ;
+
+                    }
 
 
                       
@@ -328,10 +346,10 @@ function Div_section_right_summary_component({
 
         <div className="div_summary_detials">
 
-          <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{temp_watch_data.length} movies</p>
-          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>{ temp_watch_data.length > 0 ? average_imdb_rating : 0}</p>
-          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>{temp_watch_data.length > 0 ?  average_user_rating : 0}</p>
-          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>{ temp_watch_data.length > 0 ? average_duration : 0} min</p>
+          <p className="text_total_movies_watched"><span className="icon_total_movies_watched">🎫</span>{!temp_watch_data ? 0 : temp_watch_data.length} movies</p>
+          <p className="text_average_imdb_raating"><span className="icon_average_imdb_rating">⭐</span>{ !temp_watch_data ? 0.00 :  temp_watch_data.length > 0 ? average_imdb_rating : 0}</p>
+          <p className="text_average_user_rating"><span className="icon_average_user_rating">🌟</span>{  !temp_watch_data ? 0.00 : temp_watch_data.length > 0 ?  average_user_rating : 0}</p>
+          <p className="text_average_movie_duration"><span className="icon_average_movie_duration">⏳</span>{ !temp_watch_data ? 0.00 : temp_watch_data.length > 0 ? average_duration : 0} min</p>
 
 
         </div>
@@ -373,7 +391,7 @@ temp_watch_data , set_temp_watch_data
     <div className="div_section_right_movies_list">
 
         <ul className="ul_movies_list">
-          {temp_watch_data.map((val, i) => (
+          { temp_watch_data && temp_watch_data.map((val, i) => (
 
             <li key={val.Title}>
             
@@ -443,7 +461,8 @@ temp_watch_data, set_temp_watch_data ,
 
                       let flag = true ;
 
-                      temp_watch_data.map( (val) => {
+
+                      temp_watch_data?.map( (val) => {
 
                         if(val.imdbID === big_movie_details_obj.imdbID ) {
                           flag = false ;
@@ -475,11 +494,9 @@ temp_watch_data, set_temp_watch_data ,
 
                       if(check_duplication_in_temp_movie_data_function()){
 
-                        set_temp_watch_data( (temp_watch_data) => [...temp_watch_data , movie_details_for_pushing]) ;
+                        set_temp_watch_data([...temp_watch_data , movie_details_for_pushing] ) ;
                         set_movie_clicked(false)
 
-                        
-                        
                       }
                       else if(!check_duplication_in_temp_movie_data_function()){
                         set_movie_clicked(false)
@@ -706,8 +723,9 @@ function Movie_list_component({
                   
                   set_is_loading_details(true) 
 
-                  const res = await fetch(`http://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}&=${movie_details_obj.imdbID}`) ;
-
+                  // const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movie_details_obj.imdbID}`) ;
+                  const res = await fetch(` https://www.omdbapi.com/?i=${movie_details_obj.imdbID}&apikey=${API_KEY}`)
+ 
                   const data = await res.json() ;
                   set_big_movie_details_obj( prev=>  data) ;
                   

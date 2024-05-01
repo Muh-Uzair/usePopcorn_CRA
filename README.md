@@ -6,3 +6,4 @@ usePopcorn
 4) Data comes from OMDB Api.
 
 
+Project Link : use-popcorn-cra-uzair.netlify.app

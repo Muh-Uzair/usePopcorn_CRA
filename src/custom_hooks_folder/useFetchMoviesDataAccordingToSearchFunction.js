@@ -33,7 +33,7 @@ movie_clicked , set_movie_clicked
                 set_is_loading(true) ;
                 set_error_msg("") ; 
 
-                const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${inputed_movie_name}`) ;
+                const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${inputed_movie_name}`) ;
                 if(res.ok === false) {
                   throw new Error("Error_occured") ; 
                 }
