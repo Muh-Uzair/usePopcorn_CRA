@@ -8,7 +8,7 @@ import { Btn_plus_minus_comoonent } from "./components_folder/generic_components
 import Start_rating_component from "./start_rating_component"
 import {useFetchMoviesDataAccordingToSearchFunction} from "./custom_hooks_folder/useFetchMoviesDataAccordingToSearchFunction"
 import {useLocaleStorageRetrieveWatchedMoviesData} from "./custom_hooks_folder/useLocaleStorageRetrieveWatchedMoviesData"
-import {usseAddRemoveEventListener} from "./custom_hooks_folder/usseAddRemoveEventListener"
+import {useAddRemoveEventListener} from "./custom_hooks_folder/useAddRemoveEventListener"
 
 // This movies data will be shown when we first load the app
 export const tempMovieDataDummy = [
@@ -100,7 +100,7 @@ export default function App() {
                   const input_search_bar = useRef(null) ;
 
 
-                  usseAddRemoveEventListener(movie_clicked , set_movie_clicked , input_search_bar) ;
+                  useAddRemoveEventListener(movie_clicked , set_movie_clicked , input_search_bar) ;
 
 
 

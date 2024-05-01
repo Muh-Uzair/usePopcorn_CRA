@@ -3,7 +3,7 @@ import { useState, useRef , useEffect } from "react";
 
 
 
-export function usseAddRemoveEventListener(
+export function useAddRemoveEventListener(
 movie_clicked ,
 set_movie_clicked ,
 input_search_bar ,
@@ -35,5 +35,7 @@ input_search_bar ,
         }
     })
 
-    return null ;
+
+
+    
 }
